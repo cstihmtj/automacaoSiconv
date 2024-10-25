@@ -1,5 +1,5 @@
 node_modules
-holerites/*
+temp/*
 log/*
 *.csv
 !.gitignore

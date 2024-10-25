@@ -1,8 +1,8 @@
 const puppeteer = require("puppeteer");
 const delay = require("delay");
 const writeFile = require("./writeFile")
-const { execSync } = require("child_process")
-var browser, page
+const { execSync, spawn } = require("child_process")
+let browser, page
 
 process.on("SIGINT", async () => {
     console.log("\nInterrompido pelo usuário (Ctrl+C).");
@@ -19,36 +19,60 @@ process.on("SIGTERM", async () => {
 const closeBrowser = async () => {
     if (page) await page.close();
     if (browser) await browser.close();
-    execSync("npm run stop")
+    // execSync("npm run stop")
     process.exit(0);
 };
 
 const startDebug = async () => {
-    var status = false
+    let status = false;
+
     try {
-        if (!browser) {
-            browser = await puppeteer.connect({
-                headless: false,
-                browserURL: "http://localhost:9202",
-                ignoreHTTPSErrors: true,
-                args: ["--ignore-certificate-errors", "--use-fake-ui-for-media-stream", "--disable-geolocation"],
-                defaultViewport: null
-            });
-        }
-        context = await browser.createIncognitoBrowserContext()
-        const pages = await browser.pages()
-        page = pages[0]
-        await page.setDefaultNavigationTimeout(process.env.TIMEOUT)
-        status = true
+        const chromeProcess = spawn(
+            '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"',
+            [
+                "--remote-debugging-port=9202",
+                `--user-data-dir="C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default"`
+            ],
+            { shell: true }
+        );
+
+        chromeProcess.on("error", (err) => {
+            throw new Error(`Erro ao iniciar o Chrome: ${err.message}`);
+        });
+
+        chromeProcess.on("close", (code) => {
+            if (code !== 0) {
+                throw new Error(`Chrome foi fechado com código ${code}`);
+            }
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        browser = await puppeteer.connect({
+            headless: false,
+            browserURL: "http://localhost:9202",
+            ignoreHTTPSErrors: true,
+            args: [
+                "--ignore-certificate-errors",
+                "--use-fake-ui-for-media-stream",
+                "--disable-geolocation"
+            ],
+            defaultViewport: null
+        });
+        context = await browser.createIncognitoBrowserContext();
+        const pages = await browser.pages();
+        page = pages[0];
+        await page.setDefaultNavigationTimeout(process.env.TIMEOUT);
+        status = true;
     } catch (error) {
+        console.error("Erro ao iniciar o navegador ou conectar ao Puppeteer:", error.message);
+        await closeBrowser();
         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Não foi possível iniciar o navegador!`);
-        console.log("Não foi possível iniciar o navegador: ", error)
-        await page.close();
-        await browser.close();
-        status = false
+        status = false;
     }
-    return { status, browser, page }
-}
+
+    return { status, browser, page };
+};
 
 const acessarHome = async () => {
     try {
@@ -78,8 +102,9 @@ const acessarHome = async () => {
         }
     } catch (error) {
         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Não foi possível efetuar o login!`);
-        console.log("Não foi possível efetuar o login: ", error)
+        console.log("Não foi possível efetuar o login!")
         status = false
+        await closeBrowser()
     }
     return status
 }
