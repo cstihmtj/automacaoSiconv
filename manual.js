@@ -8,7 +8,6 @@ require("dotenv/config")
 const dp = require("./automacoes/dp")
 const audit = require("./automacoes/auditoria")
 const main = require("./funcs/main")
-const separarPdf = require("./funcs/splitPdf")
 const fetch = require("node-fetch");
 
 let firstLine = true
@@ -78,9 +77,9 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                     case 6:
                         executeLine = await dp.anexarDoc(linhaLida, firstLine, page, anexo, holeritesPath)
                         break;
-                    case 8:
-                        executeLine = await audit.lancarPagamento(linhaLida, firstLine, page, anexo, holeritesPath)
-                        break;
+                    // case 8:
+                    //     executeLine = await audit.lancarPagamento(linhaLida, firstLine, page, anexo, holeritesPath)
+                    //     break;
                     default:
                         break;
                 }
@@ -98,7 +97,7 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                 if (last) {
                     console.log("Leitura finalizada!")
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Leitura finalizada!`)
-                    await resetFolder()
+                    // await resetFolder()
                     await main.closeBrowser()
                     resolve()
                 }

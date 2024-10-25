@@ -1,0 +1,23 @@
+# EM CASO DE DUVIDAS E/OU ERROS, PROCURE O CSTI!
+# OBSERVACOES GERAIS
+    1) Antes de iniciar o processo, exclua todos os arquivos dentro da pasta Arquivos > TXT e  Arquivos > Holerites;
+    2) Não compartilhe os codigos dos robos, são exatamente os mesmos em todas as maquinas, e as alterações serão feitas pelo CSTI;
+
+# Passo a passo para execução do ROBO p/ PAGAMENTO DE FOLHA E FERIAS!
+    1) Exportar o TXT de Ferias ou FOLHA do RM e enviar p/ pasta Arquivos/TXT, do ROBO.
+        Obs 1: Não é mais necessário alterar o nome e extensão do arquivo (Ex: de *.txt para siconv.csv).
+        Obs 2: Deve ter apenas um unico arquivo TXT/CSV dentro da pasta!
+    2) Exportar o arquivo contendo os Holerites do RM e enviar p/ pasta Arquivos/Holerites do ROBO.
+        Obs: Executar a separação antes de iniciar o processo de lançamento!
+    3) Com os arquivos nos locais corretos, executar o atalho da area de trabalho, chamado "Executar Robo Manual".
+    4) Será apresentada uma tela com as opções a serem escolhidas.
+    5) Escolha a opção e aguarde o processo finalizar!
+# Passo a passo para execução do ROBO p/ ANEXAR DOCUMENTOS p/ FOLHA E FERIAS!
+1) Exportar o TXT de Ferias ou FOLHA do RM e enviar p/ pasta Arquivos/TXT, do ROBO.
+        Obs 1: Não é mais necessário alterar o nome e extensão do arquivo (Ex: de *.txt para siconv.csv).
+        Obs 2: Deve ter apenas um unico arquivo TXT/CSV dentro da pasta!
+    2) Exportar o arquivo contendo os Holerites do RM e enviar p/ pasta Arquivos/Holerites do ROBO.
+        Obs: Executar a separação antes de iniciar o processo de lançamento!
+    3) Com os arquivos nos locais corretos, executar o atalho da area de trabalho, chamado "Executar Robo Manual".
+    4) Será apresentada uma tela com as opções a serem escolhidas.
+    5) Escolha a opção e aguarde o processo finalizar!
