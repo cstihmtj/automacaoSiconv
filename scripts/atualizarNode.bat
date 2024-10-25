@@ -1,2 +1,2 @@
-npm cache clean --force. 
-npm install -g n. 
+npm cache clean --force
+npm install -g n.
