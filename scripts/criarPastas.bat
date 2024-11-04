@@ -1,2 +1,5 @@
 cd ..
-mkdir arquivos/txt, arquivos/holerites
+mkdir arquivos
+cd arquivos
+mkdir holerites
+mkdir txt
