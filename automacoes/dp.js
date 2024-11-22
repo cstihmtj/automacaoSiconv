@@ -375,6 +375,9 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.type("#salvarCpfCredor", row[3])
                 await delay(500)
 
+                await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
+                await page.select("#salvarTipoPagamantoOBTV", "1")
+
                 let isDialogHandled = false;
 
                 await Promise.all([
@@ -387,10 +390,14 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     })
                 ])
 
+                await delay(500000)
+
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
                 await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
-                const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
+                const hasError = await page.evaluate(() => {
+                    return document.querySelector("#popUpLayer2") !== null;
+                });
 
                 if (hasError) {
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
@@ -741,44 +748,71 @@ const lancarRescisao = async () => {
 const excluirDoc = async (row, countLines, page) => {
     try {
         if (countLines == 0) {
+            await page.goto(process.env.HOSTDP4)
             await Promise.all([
-                await page.goto(process.env.HOSTDP4)
-            ])
-            await page.waitForSelector("#consultarNumeroConvenio", { visible: true })
-            await page.type("#consultarNumeroConvenio", row[0])
-            await page.waitForSelector("#form_submit", { visible: true })
-            await page.click("#form_submit")
-            await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
-            await page.click("#tbodyrow > tr > td > div > a");
-            await delay(500)
-            await page.waitForSelector("#consultarNumero", { visible: true })
-            await page.type("#consultarNumero", row[2])
-            await delay(500)
-            await page.waitForSelector("#form_submit", { visible: true })
-            await page.click("#form_submit")
-            await page.waitForTimeout(50000);
+                page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
+                await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
+                await page.type("#consultarNumeroConvenio", row[0]),
+                await page.waitForSelector("#form_submit", { visible: true }),
+                await page.click("#form_submit")
+            ]);
+            await Promise.all([
+                page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
+                await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true }),
+                await page.click("#tbodyrow > tr > td > div > a"),
+            ]);
+            await Promise.all([
+                page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
+                await page.waitForSelector("#consultarNumero", { visible: true }),
+                await page.type("#consultarNumero", row[2]),
+                await page.waitForSelector("#form_submit", { visible: true }),
+                await page.click("#form_submit")
+            ]);
         } else {
             await page.goto(process.env.HOSTDP3)
-            await page.waitForSelector("#consultarNumero", { visible: true })
-            await page.type("#consultarNumero", row[2])
-            await page.waitForSelector("#form_submit", { visible: true })
-            await page.click("#form_submit")
-            await page.waitForTimeout(50000);
+            await Promise.all([
+                page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
+                await page.waitForSelector("#consultarNumero", { visible: true }),
+                await page.type("#consultarNumero", row[2]),
+                await page.waitForSelector("#form_submit", { visible: true }),
+                await page.click("#form_submit")
+            ]);
         }
 
-        // const registrosDuplicados = await page.evaluate(() => { return document.querySelectorAll("#notasFiscais tr").length; });
-        // console.log(`Registros: ${registrosDuplicados}`)
-        // if (registrosDuplicados > 1) {
-        //     console.log("Total de linhas: " + registrosDuplicados);
-        //     await page.click('#notasFiscais tr:first-child');
-        //     console.log("Primeiro item clicado.");
-        await page.waitForTimeout(50000);
-        return true;
-        // } else {
-        //     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[1]}`);
-        //     console.log(`Nenhum registro duplicado encontrado! REF: ${row[1]}`);
-        //     return false;
-        // }
+        const registrosDuplicados = await page.evaluate(() => { return document.querySelectorAll("#notasFiscais tr").length; });
+        if (registrosDuplicados > 1) {
+            await page.waitForSelector("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a", { visible: true })
+            await page.click("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a");
+
+            let isDialogHandled = false;
+            await Promise.all([
+                await page.on("dialog", async dialog => {
+                    if (!isDialogHandled) {
+                        isDialogHandled = true;
+                        await delay(500);
+                        await dialog.accept();
+                    }
+                })
+            ])
+
+            await page.waitForSelector("input[value='Excluir Doc. de Liquidação']", { visible: true })
+            await Promise.all([page.click("input[value='Excluir Doc. de Liquidação']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
+
+            const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
+            if (hasError) {
+                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                return false;
+            } else {
+                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
+                console.log(`${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
+                return true
+            }
+        } else {
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[1]}`);
+            console.log(`Nenhum registro duplicado encontrado! REF: ${row[1]}`);
+            return false;
+        }
     } catch (error) {
         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[1]}: ${error}`);
         console.log(`${row[1]}: ${error}`);

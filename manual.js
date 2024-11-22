@@ -154,6 +154,7 @@ const automacaoViaArquivo = async (filePath, opcao) => {
 const startDebug = async () => {
     try {
         const browserOk = await main.startDebug()
+
         if (browserOk.status) {
             browser = browserOk.browser
             page = browserOk.page

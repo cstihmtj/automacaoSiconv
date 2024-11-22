@@ -16,10 +16,10 @@ const lancarPagamento = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true }),
-                await page.click("#tbodyrow > tr > td > div > a"),
+                await page.click("#tbodyrow > tr > td > div > a")
             ]);
-            await page.waitForSelector("input[value='Novo Pagamento']", { visible: true });
-            await page.click("input[value='Novo Pagamento']");
+            await page.waitForSelector("input[value='Novo Pagamento']", { visible: true })
+            await page.click("input[value='Novo Pagamento']")
             await delay(500)
         } else {
             await page.goto(process.env.HOSTAUD2)
@@ -48,9 +48,6 @@ const lancarPagamento = async (row, countLines, page) => {
             await delay(500)
             await page.waitForSelector("#textoObservacaoPagamento", { visible: true })
             await page.type("#textoObservacaoPagamento", `PGTO ${row[12]}`)
-            await delay(500)
-            await page.waitForSelector("#formEditarPagamentoOBTV\\:DocumentoLiquidacao_lbl", { visible: true })
-            await page.click("#formEditarPagamentoOBTV\\:DocumentoLiquidacao_lbl")
             await delay(500)
 
             let isDialogHandled = false;

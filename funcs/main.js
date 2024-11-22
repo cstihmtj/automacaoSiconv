@@ -30,7 +30,8 @@ const startDebug = async () => {
             '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"',
             [
                 "--remote-debugging-port=9202",
-                `--user-data-dir="C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default"`
+                // `--user-data-dir="C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Chrome\\User Data\\Default"`,
+                `--user-data-dir="C:\\Temp\\ChromeUserData"`
             ],
             { shell: true }
         );
@@ -49,7 +50,7 @@ const startDebug = async () => {
 
         browser = await puppeteer.connect({
             headless: false,
-            browserURL: "http://localhost:9202",
+            browserURL: "http://127.0.0.1:9202",
             ignoreHTTPSErrors: true,
             args: [
                 "--ignore-certificate-errors",
@@ -58,6 +59,7 @@ const startDebug = async () => {
             ],
             defaultViewport: null
         });
+
         context = await browser.createIncognitoBrowserContext();
         const pages = await browser.pages();
         page = pages[0];
