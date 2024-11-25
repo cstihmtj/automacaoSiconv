@@ -390,8 +390,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     })
                 ])
 
-                await delay(500000)
-
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
                 await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
