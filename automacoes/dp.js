@@ -108,7 +108,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.goto(process.env.HOSTDP2)
             ])
         }
-        if (anexo && await fileExist(anexoPath, row[11]) || !anexo) {
+        if (anexo && await fileExist(anexoPath, row[11]) || !anexo && row[3].length == 11) {
             try {
                 await page.waitForSelector("#incluirDadosDocumentoTipoDocumentoContabil", { visible: true })
                 await page.select("#incluirDadosDocumentoTipoDocumentoContabil", "22")
@@ -401,31 +401,37 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 if (hasError) {
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
                     console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    row = []
                     return false;
                 } else {
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: item concluido`)
                     console.log(`${new Date().toLocaleString()} - ${row[11]}: item concluido`)
+                    row = []
                     return true
                 }
             } catch (error) {
                 if (error.name === "TimeoutError") {
                     console.log(`Timeout atingido para a linha: ${row[11]}, Err: ${error}`);
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: Timeout na leitura: ${error}`)
+                    row = []
                     return false
                 } else {
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: Erro na leitura: ${error}`)
                     console.log(`${new Date().toLocaleString()} - ${row[11]}: Erro na leitura: ${error}`)
+                    row = []
                     return false
                 }
             }
         } else {
             console.log(`Holerite correspondente a CHAPA: ${row[11]} não foi encontrado!`)
             writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Holerite correspondente a CHAPA: ${row[11]} não foi encontrado!`)
+            row = []
             return false
         }
     } catch (error) {
         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: ${error}`);
         console.log(`${row[11]}: ${error}`);
+        row = []
         return false;
     }
 };

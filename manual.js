@@ -127,12 +127,14 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                     countLines++
                     console.log(`Linha lida com sucesso! REF: ${colunas[11] ? colunas[11] : colunas[1]} - Time: ${end - start}`)
                     writeFile("log", `${colunas[0].replace("/", "_")}`, "csv", `${linhaLida} `)
+                    colunas = []
                     cb()
                 } else {
                     countLines++
                     console.log(`Erro na leitura da linha! REF: ${colunas[11] ? colunas[11] : colunas[1]}`)
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura da linha!`)
                     writeFile("log", "erro", "csv", `${linhaLida} `)
+                    colunas = []
                     cb()
                 }
                 if (last) {
