@@ -121,6 +121,9 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
             await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
             await page.click("#tbodyrow > tr > td > div > a");
             await delay(500)
+            await Promise.all([
+                await page.goto(process.env.HOSTDP3)
+            ])
         }
         if (anexo && await fileExist(anexoPath, row[11]) || !anexo && row[3].length == 11) {
             try {
