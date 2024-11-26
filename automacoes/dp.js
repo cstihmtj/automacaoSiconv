@@ -35,24 +35,19 @@ const dadosDocLiquidacao = async (row, page, origemValor) => {
     const salvarDigitoConta = await page.$("#salvarDigitoConta");
 
     await page.waitForSelector("#salvarNumero", { visible: true })
-    await resetFieldValue("#salvarNumero")
     await page.type("#salvarNumero", row[2])
 
     await page.waitForSelector("#salvarCpfCredor", { visible: true })
-    await resetFieldValue("#salvarCpfCredor")
     await page.type("#salvarCpfCredor", row[3])
 
     await page.waitForSelector("#salvarDataDeEmissao", { visible: true })
-    await resetFieldValue("#salvarDataDeEmissao")
     await page.type("#salvarDataDeEmissao", row[4])
 
     await page.waitForSelector("#salvarDataDeSaidaEntrada", { visible: true })
-    await resetFieldValue("#salvarDataDeSaidaEntrada")
     await page.type("#salvarDataDeSaidaEntrada", row[5])
 
     await page.waitForSelector("#salvarValor", { visible: true })
     await page.click("#salvarValor")
-    await resetFieldValue("#salvarValor")
     await page.type("#salvarValor", origemValor ? origemValor : row[6])
 
     await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
@@ -61,19 +56,15 @@ const dadosDocLiquidacao = async (row, page, origemValor) => {
     await page.evaluate(() => { carregaCamposPagamento("1") })
 
     await page.waitForSelector("#salvarBanco", { visible: true })
-    await resetFieldValue("#salvarBanco")
     await page.type("#salvarBanco", row[7])
 
     await page.waitForSelector("#salvarAgencia", { visible: true })
-    await resetFieldValue("#salvarAgencia")
     await page.type("#salvarAgencia", row[8])
 
     await page.waitForSelector("#salvarConta", { visible: true })
-    await resetFieldValue("#salvarConta")
     await page.type("#salvarConta", row[9])
 
     await page.waitForSelector("#salvarDigitoConta", { visible: true })
-    await resetFieldValue("#salvarDigitoConta")
     await page.type("#salvarDigitoConta", row[10])
 }
 
@@ -94,14 +85,13 @@ const reAnexar = async (row, page, anexoPath, anexo) => {
         await page.waitForSelector("#salvarJustificativa", { visible: true })
         const salvarJustificativa = await page.$("#salvarJustificativa");
         await resetValues([salvarJustificativa])
-        await resetFieldValue("#salvarJustificativa")
         await page.type("#salvarJustificativa", "Não foi digitalizado o contra-cheque devido à instabilidade e lentidão do portal que não permitiu a inclusão do arquivo. Para que não tenha maior atraso no pagamento os lançamentos serão realizados sem o devido anexo, sendo, posteriormente, anexados.")
     }
 }
 
-const resetFieldValue = async (field) => {
+const resetFieldValue = async (page, field) => {
     console.log(`Resetando ${field}`)
-    await page.evaluate(() => document.querySelector(field).value = "")
+    await page.evaluate(() => document.querySelector(`${field}`).value = "")
 }
 
 const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
@@ -111,7 +101,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
             await Promise.all([
                 await page.goto(process.env.HOSTDP1),
                 await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
-                await resetFieldValue("#consultarNumeroConvenio"),
                 await page.type("#consultarNumeroConvenio", row[0]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
@@ -149,31 +138,25 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 if (parseFloat(row[14]) > 0) {
                     await delay(500)
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await resetFieldValue("#incluirItemNomeItem")
                     await page.type("#incluirItemNomeItem", row[12])
                     await delay(500)
                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await resetFieldValue("#incluirItemDescricaoItem")
                     await page.type("#incluirItemDescricaoItem", row[13])
                     await delay(500)
                     await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await resetFieldValue("#incluirItemCodUnidadeFornecimento")
                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                     await delay(500)
                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                     await page.click("#incluirItemValorTotalItem")
-                    await resetFieldValue("#incluirItemValorTotalItem")
                     await page.type("#incluirItemValorTotalItem", row[14])
                     await delay(500)
                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await resetFieldValue("#incluirItemQuantidadeItem")
                     await page.type("#incluirItemQuantidadeItem", "1,00")
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
                     await page.click(`input[value="${row[15]}"]`)
                     await delay(500)
                     await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
-                    await resetFieldValue(`#incluirItemRecursosRepasse${row[15]}`)
                     await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[14])
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[16]}"]`, { visible: true })
@@ -186,24 +169,19 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 if (parseFloat(row[17]) > 0) {
                     await delay(500)
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await resetFieldValue("#incluirItemNomeItem")
                     await page.type("#incluirItemNomeItem", row[12])
                     await delay(500)
                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await resetFieldValue("#incluirItemDescricaoItem")
                     await page.type("#incluirItemDescricaoItem", row[13])
                     await delay(500)
                     await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await resetFieldValue("#incluirItemCodUnidadeFornecimento")
                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                     await delay(500)
                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                     await page.click("#incluirItemValorTotalItem")
-                    await resetFieldValue("#incluirItemValorTotalItem")
                     await page.type("#incluirItemValorTotalItem", row[17])
                     await delay(500)
                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await resetFieldValue("#incluirItemQuantidadeItem")
                     await page.type("#incluirItemQuantidadeItem", "1,00")
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
@@ -211,7 +189,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await delay(500)
                     await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
                     await page.click(`#incluirItemRecursosRepasse${row[15]}`)
-                    await resetFieldValue(`#incluirItemRecursosRepasse${row[15]}`)
                     await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[17])
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[30]}"]`, { visible: true })
@@ -224,24 +201,19 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 if (parseFloat(row[18]) > 0) {
                     await delay(500)
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await resetFieldValue("#incluirItemNomeItem")
                     await page.type("#incluirItemNomeItem", row[12])
                     await delay(500)
                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await resetFieldValue("#incluirItemDescricaoItem")
                     await page.type("#incluirItemDescricaoItem", row[13])
                     await delay(500)
                     await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await resetFieldValue("#incluirItemCodUnidadeFornecimento")
                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                     await delay(500)
                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                     await page.click("#incluirItemValorTotalItem")
-                    await resetFieldValue("#incluirItemValorTotalItem")
                     await page.type("#incluirItemValorTotalItem", row[18])
                     await delay(500)
                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await resetFieldValue("#incluirItemQuantidadeItem")
                     await page.type("#incluirItemQuantidadeItem", "1,00")
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
@@ -249,7 +221,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await delay(500)
                     await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
                     await page.click(`#incluirItemRecursosRepasse${row[15]}`)
-                    await resetFieldValue(`#incluirItemRecursosRepasse${row[15]}`)
                     await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[18])
                     await delay(500)
                     await page.waitForSelector(`input[value="${row[31]}"]`, { visible: true })
@@ -277,19 +248,15 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirTributoTipoFederal", "INSS")
                     await delay(500)
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await resetFieldValue("#incluirTributoAliquota")
                     await page.type("#incluirTributoAliquota", row[19])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await resetFieldValue("#incluirTributoValor")
                     await page.type("#incluirTributoValor", row[20])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await resetFieldValue("#incluirTributoData")
                     await page.type("#incluirTributoData", row[21])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await resetFieldValue("#incluirTributoDocumento")
                     await page.type("#incluirTributoDocumento", row[22])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -305,19 +272,15 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirTributoTipoFederal", "IR")
                     await delay(500)
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await resetFieldValue("#incluirTributoAliquota")
                     await page.type("#incluirTributoAliquota", row[23])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await resetFieldValue("#incluirTributoValor")
                     await page.type("#incluirTributoValor", row[24])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await resetFieldValue("#incluirTributoData")
                     await page.type("#incluirTributoData", row[21])
                     await delay(500)
                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await resetFieldValue("#incluirTributoDocumento")
                     await page.type("#incluirTributoDocumento", row[22])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -332,7 +295,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
                     await delay(500)
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await resetFieldValue("#incluirContribuicaoValorCont")
                     await page.type("#incluirContribuicaoValorCont", row[25])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -347,7 +309,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
                     await delay(500)
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await resetFieldValue("#incluirContribuicaoValorCont")
                     await page.type("#incluirContribuicaoValorCont", row[26])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -362,7 +323,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Pensão Alimentícia")
                     await delay(500)
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await resetFieldValue("#incluirContribuicaoValorCont")
                     await page.type("#incluirContribuicaoValorCont", row[27])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -377,7 +337,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
                     await delay(500)
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await resetFieldValue("#incluirContribuicaoValorCont")
                     await page.type("#incluirContribuicaoValorCont", row[28])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -392,7 +351,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
                     await delay(500)
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await resetFieldValue("#incluirContribuicaoValorCont")
                     await page.type("#incluirContribuicaoValorCont", row[29])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -407,7 +365,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirContribuicaoDenominacao", "Contribuição Sindical")
                     await delay(500)
                     await page.waitForSelector('#incluirContribuicaoValorCont')
-                    await resetFieldValue('#incluirContribuicaoValorCont')
                     await page.type('#incluirContribuicaoValorCont', row[32])
                     await delay(500)
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -420,7 +377,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await delay(500)
 
                 await page.waitForSelector("#salvarCpfCredor", { visible: true })
-                await resetFieldValue("#salvarCpfCredor")
                 await page.type("#salvarCpfCredor", row[3])
                 await delay(500)
 
@@ -492,14 +448,12 @@ const anexarDoc = async (row, countLines, page, anexo, anexoPath) => {
             await page.waitForSelector("#contentMenu > div:nth-child(2) > ul > li:nth-child(9) > a", { visible: true })
             await page.click("#contentMenu > div:nth-child(2) > ul > li:nth-child(9) > a")
             await page.waitForSelector("#consultarNumeroConvenio", { visible: true });
-            await resetFieldValue("#consultarNumeroConvenio")
             await page.type("#consultarNumeroConvenio", row[0]);
             await page.waitForSelector("#form_submit", { visible: true });
             await page.click("#form_submit");
             await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
             await page.click("#tbodyrow > tr > td > div > a")
             await page.waitForSelector("#consultarNumero", { visible: true })
-            await resetFieldValue("#consultarNumero")
             await page.type("#consultarNumero", row[2])
             await page.waitForSelector("#form_submit", { visible: true })
             await page.click("#form_submit")
@@ -508,7 +462,6 @@ const anexarDoc = async (row, countLines, page, anexo, anexoPath) => {
         } else {
             await page.goto(process.env.HOSTDP3);
             await page.waitForSelector("#consultarNumero", { visible: true })
-            await resetFieldValue("#consultarNumero")
             await page.type("#consultarNumero", row[2])
             await page.waitForSelector("#form_submit", { visible: true })
             await page.click("#form_submit")
@@ -552,7 +505,6 @@ const lancarRescisao = async () => {
         if (firstLine) {
             await page.goto(process.env.HOSTDP1);
             await page.waitForSelector("#consultarNumeroConvenio", { visible: true });
-            await resetFieldValue("#consultarNumeroConvenio")
             await page.type("#consultarNumeroConvenio", row[0]);
             await page.waitForSelector("#form_submit", { visible: true });
             await page.click("#form_submit");
@@ -599,31 +551,25 @@ const lancarRescisao = async () => {
             if (parseFloat(row[7]) > 0) {
                 await delay(500)
                 await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                await resetFieldValue("#incluirItemNomeItem")
                 await page.type("#incluirItemNomeItem", row[12])
                 await delay(500)
                 await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                await resetFieldValue("#incluirItemDescricaoItem")
                 await page.type("#incluirItemDescricaoItem", row[13])
                 await delay(500)
                 await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                await resetFieldValue("#incluirItemCodUnidadeFornecimento")
                 await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                 await delay(500)
                 await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                 await page.click("#incluirItemValorTotalItem")
-                await resetFieldValue("#incluirItemValorTotalItem")
                 await page.type("#incluirItemValorTotalItem", row[7])
                 await delay(500)
                 await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                await resetFieldValue("#incluirItemQuantidadeItem")
                 await page.type("#incluirItemQuantidadeItem", "1,00")
                 await delay(500)
                 await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
                 await page.click(`input[value="${row[15]}"]`)
                 await delay(500)
                 await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
-                await resetFieldValue(`#incluirItemRecursosRepasse${row[15]}`)
                 await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[7])
                 await delay(500)
                 await page.waitForSelector(`input[value="${row[16]}"]`, { visible: true })
@@ -637,24 +583,19 @@ const lancarRescisao = async () => {
             if (parseFloat(row[19]) > 0) {
                 await delay(500)
                 await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                await resetFieldValue("#incluirItemNomeItem")
                 await page.type("#incluirItemNomeItem", row[12])
                 await delay(500)
                 await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                await resetFieldValue("#incluirItemDescricaoItem")
                 await page.type("#incluirItemDescricaoItem", row[13])
                 await delay(500)
                 await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                await resetFieldValue("#incluirItemCodUnidadeFornecimento")
                 await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                 await delay(500)
                 await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                 await page.click("#incluirItemValorTotalItem")
-                await resetFieldValue("#incluirItemValorTotalItem")
                 await page.type("#incluirItemValorTotalItem", row[19])
                 await delay(500)
                 await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                await resetFieldValue("#incluirItemQuantidadeItem")
                 await page.type("#incluirItemQuantidadeItem", "1,00")
                 await delay(500)
                 await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
@@ -662,7 +603,6 @@ const lancarRescisao = async () => {
                 await delay(500)
                 await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
                 await page.click(`#incluirItemRecursosRepasse${row[15]}`)
-                await resetFieldValue(`#incluirItemRecursosRepasse${row[15]}`)
                 await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[19])
                 await delay(500)
                 await page.waitForSelector(`input[value="${row[30]}"]`, { visible: true })
@@ -690,19 +630,15 @@ const lancarRescisao = async () => {
                 await page.select("#incluirTributoTipoFederal", "INSS")
                 await delay(500)
                 await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                await resetFieldValue("#incluirTributoAliquota")
                 await page.type("#incluirTributoAliquota", row[20])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoValor", { visible: true })
-                await resetFieldValue("#incluirTributoValor")
                 await page.type("#incluirTributoValor", row[21])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoData", { visible: true })
-                await resetFieldValue("#incluirTributoData")
                 await page.type("#incluirTributoData", row[22])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                await resetFieldValue("#incluirTributoDocumento")
                 await page.type("#incluirTributoDocumento", row[23])
                 await delay(500)
                 await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -720,19 +656,15 @@ const lancarRescisao = async () => {
                 await page.select("#incluirTributoTipoFederal", "INSS")
                 await delay(500)
                 await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                await resetFieldValue("#incluirTributoAliquota")
                 await page.type("#incluirTributoAliquota", row[28])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoValor", { visible: true })
-                await resetFieldValue("#incluirTributoValor")
                 await page.type("#incluirTributoValor", row[29])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoData", { visible: true })
-                await resetFieldValue("#incluirTributoData")
                 await page.type("#incluirTributoData", row[22])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                await resetFieldValue("#incluirTributoDocumento")
                 await page.type("#incluirTributoDocumento", row[23])
                 await delay(500)
                 await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -750,19 +682,15 @@ const lancarRescisao = async () => {
                 await page.select("#incluirTributoTipoFederal", "IR")
                 await delay(500)
                 await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                await resetFieldValue("#incluirTributoAliquota")
                 await page.type("#incluirTributoAliquota", row[24])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoValor", { visible: true })
-                await resetFieldValue("#incluirTributoValor")
                 await page.type("#incluirTributoValor", row[25])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoData", { visible: true })
-                await resetFieldValue("#incluirTributoData")
                 await page.type("#incluirTributoData", row[22])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                await resetFieldValue("#incluirTributoDocumento")
                 await page.type("#incluirTributoDocumento", row[23])
                 await delay(500)
                 await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -780,19 +708,15 @@ const lancarRescisao = async () => {
                 await page.select("#incluirTributoTipoFederal", "IR")
                 await delay(500)
                 await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                await resetFieldValue("#incluirTributoAliquota")
                 await page.type("#incluirTributoAliquota", row[26])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoValor", { visible: true })
-                await resetFieldValue("#incluirTributoValor")
                 await page.type("#incluirTributoValor", row[27])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoData", { visible: true })
-                await resetFieldValue("#incluirTributoData")
                 await page.type("#incluirTributoData", row[22])
                 await delay(500)
                 await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                await resetFieldValue("#incluirTributoDocumento")
                 await page.type("#incluirTributoDocumento", row[23])
                 await delay(500)
                 await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -837,7 +761,6 @@ const excluirDoc = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
-                await resetFieldValue("#consultarNumeroConvenio"),
                 await page.type("#consultarNumeroConvenio", row[0]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
@@ -850,7 +773,6 @@ const excluirDoc = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#consultarNumero", { visible: true }),
-                await resetFieldValue("#consultarNumero"),
                 await page.type("#consultarNumero", row[2]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
@@ -860,7 +782,6 @@ const excluirDoc = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#consultarNumero", { visible: true }),
-                await resetFieldValue("#consultarNumero"),
                 await page.type("#consultarNumero", row[2]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
