@@ -64,6 +64,7 @@ const startDebug = async () => {
         const pages = await browser.pages();
         page = pages[0];
         await page.setDefaultNavigationTimeout(process.env.TIMEOUT);
+        await page.setDefaultTimeout(process.env.TIMEOUT);
         await page.setJavaScriptEnabled(true)
         status = true;
     } catch (error) {
