@@ -91,6 +91,8 @@ const reAnexar = async (row, page, anexoPath, anexo) => {
 
 const resetFieldValue = async (page, field) => {
     console.log(`Resetando ${field}`)
+    await page.waitForSelector(`${field}`, { visible: true });
+    await page.click(`${field}`);
     await page.evaluate(() => document.querySelector(`${field}`).value = "")
 }
 
@@ -110,8 +112,15 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
             await delay(500)
         } else {
             await Promise.all([
-                await page.goto(process.env.HOSTDP2)
+                await page.goto(process.env.HOSTDP5),
+                await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
+                await page.type("#consultarNumeroConvenio", row[0]),
+                await page.waitForSelector("#form_submit", { visible: true }),
+                await page.click("#form_submit")
             ])
+            await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
+            await page.click("#tbodyrow > tr > td > div > a");
+            await delay(500)
         }
         if (anexo && await fileExist(anexoPath, row[11]) || !anexo && row[3].length == 11) {
             try {
