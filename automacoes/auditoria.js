@@ -1,8 +1,9 @@
+const delay = require("delay");
 const writeFile = require("../funcs/writeFile")
 
 const lancarPagamento = async (row, countLines, page) => {
     try {
-        console.log(`Lendo linha ${countLines} - CHAPA: ${row[11]} - ${row[12]}`)
+        console.log(`Executando (${countLines}) - CHAPA: ${row[11]} - ${row[12]}`)
         if (countLines === 0) {
             await page.goto(process.env.HOSTAUD1, { waitUntil: "networkidle2" });
             await page.waitForSelector("#consultarNumeroConvenio", { visible: true });
@@ -35,40 +36,49 @@ const lancarPagamento = async (row, countLines, page) => {
         if (opcaoEncontrada) {
             let optValue = await (await opcaoEncontrada.getProperty("value")).jsonValue();
             await page.select(`#formEditarPagamentoOBTV\\:manterPagamentoOBTVControleNotaFiscalCombo`, optValue)
-            await page.waitForFunction(() => {
+            const loaded = await page.waitForFunction(() => {
                 const carregando = document.querySelector(".carregando")
                 return !carregando || carregando.style.display === "none"
             });
-        }
+            const isLoaded = await loaded.jsonValue()
+            if (isLoaded) {
+                await page.waitForSelector("#formEditarPagamentoOBTV\\:DetalhesPagamento_lbl", { visible: true, timeout: process.env.TIMEOUT })
+                await Promise.all([await page.click("#formEditarPagamentoOBTV\\:DetalhesPagamento_lbl"), page.waitForNavigation({ waitUntil: "networkidle2" })]);
 
-        if (opcaoEncontrada != null) {
-            await page.waitForSelector("#formEditarPagamentoOBTV\\:DetalhesPagamento_lbl", { visible: true })
-            await page.click("#formEditarPagamentoOBTV\\:DetalhesPagamento_lbl")
-            await page.waitForSelector("#textoObservacaoPagamento", { visible: true })
-            await page.type("#textoObservacaoPagamento", `PGTO ${row[12]}`)
+                await Promise.all([
+                    page.click("#formEditarPagamentoOBTV\\:DetalhesPagamento_lbl"),
+                    page.waitForFunction(() => {
+                        const textoObservacao = document.querySelector("#textoObservacaoPagamento");
+                        return textoObservacao && textoObservacao.offsetParent !== null;
+                    }, { timeout: process.env.TIMEOUT })
+                ]);
 
-            let isDialogHandled = false;
-            await Promise.all([
-                await page.on("dialog", async dialog => {
-                    if (!isDialogHandled) {
-                        isDialogHandled = true;;
-                        await dialog.accept();
-                    }
-                })
-            ])
+                await page.waitForSelector("#textoObservacaoPagamento", { visible: true });
+                await page.type("#textoObservacaoPagamento", `PGTO ${row[12]}`);
 
-            await page.waitForSelector("input[value='Concluir Pagamento']", { visible: true })
-            await Promise.all([page.click("input[value='Concluir Pagamento']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
+                let isDialogHandled = false;
+                await Promise.all([
+                    await page.on("dialog", async dialog => {
+                        if (!isDialogHandled) {
+                            isDialogHandled = true;;
+                            await dialog.accept();
+                        }
+                    })
+                ])
 
-            const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
-            if (hasError) {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                return false;
-            } else {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
-                return true
+                await page.waitForSelector("input[value='Concluir Pagamento']", { visible: true })
+                await Promise.all([page.click("input[value='Concluir Pagamento']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
+
+                const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
+                if (hasError) {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    return false;
+                } else {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
+                    return true
+                }
             }
         } else {
             writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]} - ${row[2]}: Item indisponivel p/ seleção!`)

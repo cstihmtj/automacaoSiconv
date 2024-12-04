@@ -123,15 +123,16 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                         break;
                 }
                 const end = performance.now();
+                const tempoTotal = Math.round((end - start) / 1000)
                 if (executeLine) {
                     countLines++
-                    console.log(`Linha lida com sucesso! REF: ${colunas[11] ? colunas[11] : colunas[1]} - Time: ${end - start}`)
+                    console.log(`Chapa ${colunas[11] ? colunas[11] : colunas[1]} executada com sucesso! - Tempo total: ${tempoTotal} seg`)
                     writeFile("log", `${colunas[0].replace("/", "_")}`, "csv", `${linhaLida} `)
                     colunas = []
                     cb()
                 } else {
                     countLines++
-                    console.log(`Erro na leitura da linha! REF: ${colunas[11] ? colunas[11] : colunas[1]}`)
+                    console.log(`Erro na leitura da Chapa ${colunas[11] ? colunas[11] : colunas[1]}`)
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura da linha!`)
                     writeFile("log", "erro", "csv", `${linhaLida} `)
                     colunas = []
@@ -144,8 +145,8 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                     resolve()
                 }
             } catch (error) {
-                console.log(`Erro na leitura do arquivo siconv.csv!`)
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura do arquivo siconv.csv!`)
+                console.log(`Erro na leitura do arquivo TXT!`)
+                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura do arquivo TXT!`)
                 await main.closeBrowser()
                 reject(error)
             }

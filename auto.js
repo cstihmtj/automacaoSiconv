@@ -15,7 +15,7 @@ let browser, page
 const holeritesPath = path.join(__dirname, "arquivos", "holerites")
 const txtPath = path.join(__dirname, "arquivos", "txt")
 
-const hostApi = "http://192.168.220.143:2222"
+const hostApi = "http://fluig.hmtj.org.br:2222/"
 // const hostApi = "http://localhost:2222"
 
 process.on("SIGINT", async () => {
@@ -64,6 +64,7 @@ const startDebug = async () => {
 }
 
 const iniciarAutomatizado = async (opcaoData, opcao, params) => {
+    console.log(params)
     try {
         if (opcaoData.length === 0) return;
         console.log(`Leitura iniciada!`)
@@ -89,17 +90,17 @@ const iniciarAutomatizado = async (opcaoData, opcao, params) => {
                         default:
                             break;
                     }
+                    const end = performance.now();
                     if (executeLine) {
-                        firstLine = false
-                        console.log("Linha lida com sucesso! executeLine: ", executeLine)
+                        console.log(`Linha lida com sucesso! - Time: ${end - start}: `, executeLine)
                         writeFile("log", "ok", "csv", `${linhaLida}`)
                     } else {
                         console.log("Erro na leitura da linha! executeLine: ", executeLine)
                         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura da linha!`)
                         writeFile("log", "erro", "csv", `${linhaLida}`)
                     }
-                    // LEITURA DA ULTIMA LINHA
-                    if (i === opcaoData.length - 1) {
+
+                    if (i === opcaoData.length - 1) {// LEITURA DA ULTIMA LINHA
                         console.log("Leitura finalizada!")
                         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Leitura finalizada!`)
                         await resetFolder()
@@ -121,8 +122,8 @@ const getValuesFromConsole = (question) => {
     });
 };
 
-const getCodFilial = (SECAO) => {
-    switch (parseInt(SECAO)) {
+const getCodFilial = (CODFILIAL) => {
+    switch (parseInt(CODFILIAL)) {
         case 980:
             return "01.02.002.101"
         case 981:
@@ -146,12 +147,12 @@ const parametrosBusca = async (opcao) => {
             var ANO = await getValuesFromConsole("Digite o ANO DE COMP: ");
             var MES = await getValuesFromConsole("Digite o MES DE COMP: ");
             var NPERIODO = await getValuesFromConsole("Digite o Nº PERIODO: ");
-            var SECAO = getCodFilial(await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: "));
+            var CODFILIAL = await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: ")
             var CHAPA = await getValuesFromConsole("Digite a CHAPA (Separadas por virgula): ");
 
-            var URL_DATA = `${hostApi}/siconv/dadosFolha?SECAO=${SECAO}&ANO=${ANO}&MES=${MES}&NROPERIODO=${NPERIODO}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
-            var URL_FILES = anexo ? `${hostApi}/siconv/holerites?SETOR=${SECAO}&ANO=${ANO}&MES=${MES}${CHAPA ? `&CHAPA=${CHAPA}` : ""}` : false
-            params.push({ ANO, MES, NPERIODO, SECAO, CHAPA, URL_DATA, URL_FILES })
+            var URL_DATA = `${hostApi}/siconv/dadosFolha?CODFILIAL=${CODFILIAL}&ANO=${ANO}&MES=${MES}&NROPERIODO=${NPERIODO}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
+            var URL_FILES = anexo ? `${hostApi}/siconv/holerites?SETOR=${CODFILIAL}&ANO=${ANO}&MES=${MES}${CHAPA ? `&CHAPA=${CHAPA}` : ""}` : false
+            params.push({ ANO, MES, NPERIODO, CODFILIAL, CHAPA, URL_DATA, URL_FILES })
             rl.close();
             break;
         case 3:
@@ -159,30 +160,30 @@ const parametrosBusca = async (opcao) => {
         case 6:
             var DATAINICIO = await getValuesFromConsole("Digite a DATA DE INICIO: ");
             var DATAFIM = await getValuesFromConsole("Digite a DATA DE FIM: ");
-            var SECAO = getCodFilial(await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: "));
+            var CODFILIAL = await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: ")
             var CHAPA = await getValuesFromConsole("Digite a CHAPA (Separadas por virgula): ");
-            var URL_DATA = `${hostApi}/siconv/dadosFerias?SECAO=${SECAO}&DATAINICIO=${DATAINICIO}&DATAFIM=${DATAFIM}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
+            var URL_DATA = `${hostApi}/siconv/dadosFerias?CODFILIAL=${CODFILIAL}&DATAINICIO=${DATAINICIO}&DATAFIM=${DATAFIM}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
             var URL_FILES = anexo ? true : false //PENDENTE DE TRANSFORMAR O HOLERITE ATUAL DE FERIAS
-            params.push({ DATAINICIO, DATAFIM, SECAO, CHAPA, URL_DATA })
+            params.push({ DATAINICIO, DATAFIM, CODFILIAL, CHAPA, URL_DATA })
             rl.close();
             break;
         case 8:
             var ANO = await getValuesFromConsole("Digite o ANO DE COMP: ");
             var MES = await getValuesFromConsole("Digite o MES DE COMP: ");
             var NPERIODO = await getValuesFromConsole("Digite o Nº PERIODO: ");
-            var SECAO = getCodFilial(await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: "));
+            var CODFILIAL = await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: ")
             var CHAPA = await getValuesFromConsole("Digite a CHAPA (Separadas por virgula): ");
-            var URL_DATA = `${hostApi}/siconv/dadosFolha?SECAO=${SECAO}&ANO=${ANO}&MES=${MES}&NROPERIODO=${NPERIODO}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
-            params.push({ ANO, MES, NPERIODO, SECAO, CHAPA, URL_DATA })
+            var URL_DATA = `${hostApi}/siconv/dadosFolha?CODFILIAL=${CODFILIAL}&ANO=${ANO}&MES=${MES}&NROPERIODO=${NPERIODO}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
+            params.push({ ANO, MES, NPERIODO, CODFILIAL, CHAPA, URL_DATA })
             rl.close();
             break;
         case 9:
             var DATAINICIO = await getValuesFromConsole("Digite o inicio do periodo: ");
             var DATAFIM = await getValuesFromConsole("Digite o fim do periodo : ");
-            var SECAO = getCodFilial(await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: "));
+            var CODFILIAL = await getValuesFromConsole("\n980) Casai Brasilia\n981) Dsei Alto Rio Juruá\n982) Dsei Tapajós\n983) Dsei Porto Velho\nDigite o Nº da Unidade: ")
             var CHAPA = await getValuesFromConsole("Digite a CHAPA (Separadas por virgula): ");
-            var URL_DATA = `${hostApi}/siconv/dadosFerias?SECAO=${SECAO}&DATAINICIO=${DATAINICIO}&DATAFIM=${DATAFIM}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
-            params.push({ ANO, MES, NPERIODO, SECAO, CHAPA, URL_DATA })
+            var URL_DATA = `${hostApi}/siconv/dadosFerias?CODFILIAL=${CODFILIAL}&DATAINICIO=${DATAINICIO}&DATAFIM=${DATAFIM}${CHAPA ? `&CHAPA=${CHAPA}` : ""}`
+            params.push({ ANO, MES, NPERIODO, CODFILIAL, CHAPA, URL_DATA })
             rl.close();
             break;
         default:

@@ -98,7 +98,7 @@ const resetFieldValue = async (page, field) => {
 
 const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
     try {
-        console.log(`Lendo linha ${countLines} - CHAPA: ${row[11]}`)
+        console.log(`Executando (${countLines}) - CHAPA: ${row[11]}`)
         if (countLines == 0) {
             await Promise.all([
                 await page.goto(process.env.HOSTDP1),
