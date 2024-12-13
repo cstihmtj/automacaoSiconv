@@ -153,22 +153,22 @@ const rescisao = async (row, countLines, page) => {
 
             const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
             if (hasError) {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: erro no envio do item`);
+                console.log(`${new Date().toLocaleString()} - ${row[12]}: erro no envio do item`);
                 return false;
             } else {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
+                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: pagamento realizado!`)
+                console.log(`${new Date().toLocaleString()} - ${row[12]}: pagamento realizado!`)
                 return true
             }
         } else {
-            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]} - ${row[2]}: Item indisponivel p/ seleção!`)
-            console.log(`${new Date().toLocaleString()} - ${row[11]} - ${row[2]}: Item indisponivel p/ seleção!`)
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]} - ${row[2]}: Item indisponivel p/ seleção!`)
+            console.log(`${new Date().toLocaleString()} - ${row[12]} - ${row[2]}: Item indisponivel p/ seleção!`)
             return false
         }
     } catch (error) {
-        writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]} - ${row[2]}: ${error}`);
-        console.log(`${row[11]}: ${error}`);
+        writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]} - ${row[2]}: ${error}`);
+        console.log(`${row[12]}: ${error}`);
         return false;
     }
 }
