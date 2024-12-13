@@ -93,7 +93,7 @@ const verifyTxtExist = async () => {
 };
 
 const automacaoViaArquivo = async (filePath, opcao) => {
-    let anexo = [1, 5, 3, 6].includes(opcao)
+    let anexo = [1, 5, 3, 6, 7].includes(opcao)
     let countLines = 0
     let time = 0
     return new Promise((resolve, reject) => {
@@ -113,10 +113,17 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                     case 6:
                         executeLine = await dp.anexarDoc(colunas, countLines, page, anexo, holeritesPath)
                         break;
+                    case 7:
                     case 8:
+                        executeLine = await dp.lancarRescisao(colunas, countLines, page, anexo, holeritesPath)
+                        break;
+                    case 9:
                         executeLine = await audit.lancarPagamento(colunas, countLines, page)
                         break;
                     case 10:
+                        executeLine = await audit.rescisao(colunas, countLines, page)
+                        break;
+                    case 11:
                         executeLine = await dp.excluirDoc(colunas, countLines, page)
                         break;
                     default:
@@ -232,10 +239,11 @@ const start = async () => {
     console.log("> 4) DP - Lançar Férias sem anexo;")
     console.log("> 5) DP - Incluir anexo p/ Folha;")
     console.log("> 6) DP - Incluir anexo p/ Férias;")
-    console.log("> 7) DP - Lançar rescisão;")
-    console.log("> 8) Auditoria - Lançar Folha/Férias;")
-    console.log("> 9) Auditoria - Rescisão;")
-    console.log("> 10) DP - Excluir doc. de liquidação;")
+    console.log("> 7) DP - Lançar rescisão com anexo;")
+    console.log("> 8) DP - Lançar rescisão sem anexo;")
+    console.log("> 9) Auditoria - Lançar Folha/Férias;")
+    console.log("> 10) Auditoria - Rescisão;")
+    // console.log("> 11) DP - Excluir doc. de liquidação;")
     console.log("> 0) Cancelar")
 
     rl.question("Digite a opção p/ iniciar: ", async (op) => {
