@@ -463,6 +463,9 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
 
         if (anexo && await fileExist(anexoPath, row[12]) || !anexo && row[3].length == 11) {
             try {
+                const etapa = row[15]
+                const [metaServico, metaTributo] = row[16].split("_")
+
                 await page.waitForSelector("#incluirDadosDocumentoTipoDocumentoContabil", { visible: true })
                 await page.select("#incluirDadosDocumentoTipoDocumentoContabil", "22")
                 await page.waitForSelector(`[id=incluirDadosDocumentoDespesaAdministrativa][value="${row[1] == 2 ? 1 : 0}"]`, { visible: true })
@@ -476,6 +479,32 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']", { visible: true })
                 await page.click("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']")
 
+                // VALOR TOTAL ITENS - SERVICO
+                if (parseFloat(row[6]) > 0) {
+                    await page.waitForSelector("#incluirItemNomeItem", { visible: true })
+                    await page.type("#incluirItemNomeItem", row[12])
+                    await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
+                    await page.type("#incluirItemDescricaoItem", row[13])
+                    await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
+                    await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
+                    await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
+                    await page.click("#incluirItemValorTotalItem")
+                    await page.type("#incluirItemValorTotalItem", row[6])
+                    await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
+                    await page.type("#incluirItemQuantidadeItem", "1,00")
+                    await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
+                    await page.click(`input[value="${etapa}"]`)
+                    await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
+                    await page.type(`#incluirItemRecursosRepasse${etapa}`, row[6])
+
+                    await page.waitForSelector(`input[value="${metaServico}"]`, { visible: true })
+                    await page.click(`input[value="${metaServico}"]`)
+
+                    await page.waitForSelector(`#form_submit`, { visible: true })
+                    await page.click("#form_submit");
+                }
+
+                // VALOR TOTAL ITENS - TRIBUTO
                 if (parseFloat(row[7]) > 0) {
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
                     await page.type("#incluirItemNomeItem", row[12])
@@ -488,56 +517,14 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirItemValorTotalItem", row[7])
                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
                     await page.type("#incluirItemQuantidadeItem", "1,00")
-                    await page.waitForSelector(`input[value="${row[16]}"]`, { visible: true })
-                    await page.click(`input[value="${row[16]}"]`)
-                    await page.waitForSelector(`#incluirItemRecursosRepasse${row[16]}`, { visible: true })
-                    await page.type(`#incluirItemRecursosRepasse${row[16]}`, row[7])
-                    await page.waitForSelector(`input[value="${row[17]}"]`, { visible: true })
-                    await page.click(`input[value="${row[17]}"]`)
-                    await page.waitForSelector(`#form_submit`, { visible: true })
-                    await page.click("#form_submit");
-                }
+                    await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
+                    await page.click(`input[value="${etapa}"]`)
+                    await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
+                    await page.type(`#incluirItemRecursosRepasse${etapa}`, row[7])
 
-                if (parseFloat(row[19]) > 0) {
-                    await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await page.type("#incluirItemNomeItem", row[12])
-                    await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await page.type("#incluirItemDescricaoItem", row[13])
-                    await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
-                    await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
-                    await page.click("#incluirItemValorTotalItem")
-                    await page.type("#incluirItemValorTotalItem", row[19])
-                    await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await page.type("#incluirItemQuantidadeItem", "1,00")
-                    await page.waitForSelector(`input[value="${row[16]}"]`, { visible: true })
-                    await page.click(`input[value="${row[16]}"]`)
-                    await page.waitForSelector(`#incluirItemRecursosRepasse${row[16]}`, { visible: true })
-                    await page.type(`#incluirItemRecursosRepasse${row[16]}`, row[19])
-                    await page.waitForSelector(`input[value="${row[17]}"]`, { visible: true })
-                    await page.click(`input[value="${row[17]}"]`)
-                    await page.waitForSelector(`#form_submit`, { visible: true })
-                    await page.click("#form_submit");
-                }
+                    await page.waitForSelector(`input[value="${metaTributo}"]`, { visible: true })
+                    await page.click(`input[value="${metaTributo}"]`)
 
-                if (parseFloat(row[18]) > 0) {
-                    await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await page.type("#incluirItemNomeItem", row[12])
-                    await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await page.type("#incluirItemDescricaoItem", row[13])
-                    await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
-                    await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
-                    await page.click("#incluirItemValorTotalItem")
-                    await page.type("#incluirItemValorTotalItem", row[18])
-                    await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await page.type("#incluirItemQuantidadeItem", "1,00")
-                    await page.waitForSelector(`input[value="${row[16]}"]`, { visible: true })
-                    await page.click(`input[value="${row[16]}"]`)
-                    await page.waitForSelector(`#incluirItemRecursosRepasse${row[16]}`, { visible: true })
-                    await page.type(`#incluirItemRecursosRepasse${row[16]}`, row[18])
-                    await page.waitForSelector(`input[value="${row[17]}"]`, { visible: true })
-                    await page.click(`input[value="${row[17]}"]`)
                     await page.waitForSelector(`#form_submit`, { visible: true })
                     await page.click("#form_submit");
                 }
@@ -549,24 +536,24 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 await page.click("input[value='Informar Tributos / Contribuições']");
 
                 // INSS
-                // console.log(`INSS: Aliquota: ${row[20]} - Valor: ${row[21]}`)
-                if (parseFloat(row[21]) > 0) {
+                console.log(`INSS: Aliquota: ${row[19]} - Valor: ${row[20]}`)
+                if (parseFloat(row[20]) > 0) {
                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
                     await page.select("#incluirTributoEsfera", "FEDERAL")
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "INSS")
 
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[20])
+                    await page.type("#incluirTributoAliquota", row[19])
 
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await page.type("#incluirTributoValor", row[21])
+                    await page.type("#incluirTributoValor", row[20])
 
                     await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await page.type("#incluirTributoData", row[22])
+                    await page.type("#incluirTributoData", row[5])
 
                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await page.type("#incluirTributoDocumento", row[23])
+                    await page.type("#incluirTributoDocumento", row[12])
 
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -575,20 +562,61 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 }
 
                 // INSS 13
-                // console.log(`INSS 13: Aliquota: ${row[26]} - Valor: ${row[27]}`)
-                if (parseFloat(row[27]) > 0) {
+                console.log(`INSS 13: Aliquota: ${row[25]} - Valor: ${row[26]}`)
+                if (parseFloat(row[26]) > 0) {
                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
                     await page.select("#incluirTributoEsfera", "FEDERAL")
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "INSS")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[26])
+                    await page.type("#incluirTributoAliquota", row[25])
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await page.type("#incluirTributoValor", row[27])
+                    await page.type("#incluirTributoValor", row[26])
                     await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await page.type("#incluirTributoData", row[22])
+                    await page.type("#incluirTributoData", row[5])
                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await page.type("#incluirTributoDocumento", row[23])
+                    await page.type("#incluirTributoDocumento", row[12])
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+                    await page.click("input[value='Incluir Tributo']");
+                }
+
+                // IRRF
+                console.log(`IR: Aliquota: ${row[21]} - Valor: ${row[22]}`)
+                if (parseFloat(row[22]) > 0) {
+                    await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+                    await page.select("#incluirTributoEsfera", "FEDERAL")
+                    await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+                    await page.select("#incluirTributoTipoFederal", "IR")
+                    await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+                    await page.type("#incluirTributoAliquota", row[21])
+                    await page.waitForSelector("#incluirTributoValor", { visible: true })
+                    await page.type("#incluirTributoValor", row[22])
+                    await page.waitForSelector("#incluirTributoData", { visible: true })
+                    await page.type("#incluirTributoData", row[5])
+                    await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+                    await page.type("#incluirTributoDocumento", row[12])
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+                    await page.click("input[value='Incluir Tributo']");
+                }
+
+                console.log(`IRRF 13: Aliquota: ${row[23]} - Valor: ${row[24]}`)
+                if (parseFloat(row[24]) > 0) {
+                    await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+                    await page.select("#incluirTributoEsfera", "FEDERAL")
+                    await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+                    await page.select("#incluirTributoTipoFederal", "IR")
+                    await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+                    await page.type("#incluirTributoAliquota", row[23])
+                    await page.waitForSelector("#incluirTributoValor", { visible: true })
+                    await page.type("#incluirTributoValor", row[24])
+                    await page.waitForSelector("#incluirTributoData", { visible: true })
+                    await page.type("#incluirTributoData", row[5])
+                    await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+                    await page.type("#incluirTributoDocumento", row[12])
 
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
@@ -596,57 +624,15 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.waitForNavigation()
                 }
 
-                // IRRF
-                // console.log(`IRRF: Aliquota: ${row[24]} - Valor: ${row[25]}`)
-                if (parseFloat(row[25]) > 0) {
-                    await page.waitForSelector("#incluirTributoEsfera", { visible: true })
-                    await page.select("#incluirTributoEsfera", "FEDERAL")
-                    await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
-                    await page.select("#incluirTributoTipoFederal", "IR")
-                    await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[24])
-                    await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await page.type("#incluirTributoValor", row[25])
-                    await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await page.type("#incluirTributoData", row[22])
-                    await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await page.type("#incluirTributoDocumento", row[23])
-
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
-                    await page.click("input[value='Incluir Tributo']");
-                }
-
-                // IRRF 13
-                // console.log(`IRRF 13: Aliquota: ${row[28]} - Valor: ${row[29]}`)
-                if (parseFloat(row[28]) > 0) {
-                    await page.waitForSelector("#incluirTributoEsfera", { visible: true })
-                    await page.select("#incluirTributoEsfera", "FEDERAL")
-                    await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
-                    await page.select("#incluirTributoTipoFederal", "IR")
-                    await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[28])
-                    await page.waitForSelector("#incluirTributoValor", { visible: true })
-                    await page.type("#incluirTributoValor", row[29])
-                    await page.waitForSelector("#incluirTributoData", { visible: true })
-                    await page.type("#incluirTributoData", row[22])
-                    await page.waitForSelector("#incluirTributoDocumento", { visible: true })
-                    await page.type("#incluirTributoDocumento", row[23])
-
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
-                    await page.click("input[value='Incluir Tributo']");
-                }
-
                 //OUTROS DESCONTO
-                // console.log(`OUTROS DESCONTO: ${row[18]}`)
-                if (parseFloat(row[18]) > 0) {
+                console.log(`OUTROS DESCONTO: ${row[17]}`)
+                if (parseFloat(row[17]) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
                     await page.waitForSelector("#incluirContribuicaoDenominacao", { visible: true })
                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
-                    await page.type("#incluirContribuicaoValorCont", row[18])
+                    await page.type("#incluirContribuicaoValorCont", row[17])
 
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
@@ -659,7 +645,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
 
                 await dadosDocLiquidacao(row, page, false, false)
 
-                // await new Promise(resolve => setTimeout(resolve, 100000000));
+                await new Promise(resolve => setTimeout(resolve, 100000000));
 
                 await page.on("dialog", async dialog => {
                     await delay(3000)
@@ -765,3 +751,248 @@ const excluirDoc = async (row, countLines, page) => {
 }
 
 module.exports = { lancarPagamento, anexarDoc, lancarRescisao, excluirDoc }
+
+
+
+// const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
+//     try {
+//         console.log(`Executando (${countLines}) - CHAPA: ${row[12]}`)
+//         if (countLines == 0) {
+//             await Promise.all([
+//                 await page.goto(process.env.HOSTDP1),
+//                 await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
+//                 await page.type("#consultarNumeroConvenio", row[0]),
+//                 await page.waitForSelector("#form_submit", { visible: true }),
+//                 await page.click("#form_submit")
+//             ])
+//             await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
+//             await page.click("#tbodyrow > tr > td > div > a");
+//         } else {
+//             await Promise.all([
+//                 await page.goto(process.env.HOSTDP5),
+//                 await page.waitForSelector("#consultarNumeroConvenio", { visible: true }),
+//                 await page.type("#consultarNumeroConvenio", row[0]),
+//                 await page.waitForSelector("#form_submit", { visible: true }),
+//                 await page.click("#form_submit")
+//             ])
+//             await page.waitForSelector("#tbodyrow > tr > td > div > a", { visible: true });
+//             await page.click("#tbodyrow > tr > td > div > a");
+//             await Promise.all([
+//                 await page.goto(process.env.HOSTDP3),
+//                 await page.waitForSelector("input[value='Incluir Documento de Liquidação']", { visible: true }),
+//                 await page.click("input[value='Incluir Documento de Liquidação']")
+//             ])
+//         }
+
+//         if (anexo && await fileExist(anexoPath, row[12]) || !anexo && row[3].length == 11) {
+//             try {
+//                 const [etapa, meta] = row[16].split("/")
+
+//                 await page.waitForSelector("#incluirDadosDocumentoTipoDocumentoContabil", { visible: true })
+//                 await page.select("#incluirDadosDocumentoTipoDocumentoContabil", "22")
+//                 await page.waitForSelector(`[id=incluirDadosDocumentoDespesaAdministrativa][value="${row[1] == 2 ? 1 : 0}"]`, { visible: true })
+//                 await page.click(`[id=incluirDadosDocumentoDespesaAdministrativa][value="${row[1] == 2 ? 1 : 0}"]`)
+//                 await page.waitForSelector("#form_submit", { visible: true })
+//                 await page.click("#form_submit")
+//                 await page.waitForNavigation()
+
+//                 await reAnexar(row, page, anexoPath, anexo, row[12])
+
+//                 await page.waitForSelector("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']", { visible: true })
+//                 await page.click("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']")
+
+//                 // VALOR TOTAL ITENS - SERVICO
+//                 if (parseFloat(row[7]) > 0) {
+//                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
+//                     await page.type("#incluirItemNomeItem", row[12])
+//                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
+//                     await page.type("#incluirItemDescricaoItem", row[13])
+//                     await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
+//                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
+//                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
+//                     await page.click("#incluirItemValorTotalItem")
+//                     await page.type("#incluirItemValorTotalItem", row[7])
+//                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
+//                     await page.type("#incluirItemQuantidadeItem", "1,00")
+//                     await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
+//                     await page.click(`input[value="${row[15]}"]`)
+//                     await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
+//                     await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[7])
+
+//                     await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
+//                     await page.click(`input[value="${etapa}"]`)
+
+//                     await page.waitForSelector(`#form_submit`, { visible: true })
+//                     await page.click("#form_submit");
+//                 }
+
+//                 // VALOR TOTAL ITENS - TRIBUTO
+//                 if (parseFloat(row[19]) > 0) {
+//                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
+//                     await page.type("#incluirItemNomeItem", row[12])
+//                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
+//                     await page.type("#incluirItemDescricaoItem", row[13])
+//                     await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
+//                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
+//                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
+//                     await page.click("#incluirItemValorTotalItem")
+//                     await page.type("#incluirItemValorTotalItem", row[19])
+//                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
+//                     await page.type("#incluirItemQuantidadeItem", "1,00")
+//                     await page.waitForSelector(`input[value="${row[15]}"]`, { visible: true })
+//                     await page.click(`input[value="${row[15]}"]`)
+//                     await page.waitForSelector(`#incluirItemRecursosRepasse${row[15]}`, { visible: true })
+//                     await page.type(`#incluirItemRecursosRepasse${row[15]}`, row[19])
+
+//                     await page.waitForSelector(`input[value="${meta}"]`, { visible: true })
+//                     await page.click(`input[value="${meta}"]`)
+
+//                     await page.waitForSelector(`#form_submit`, { visible: true })
+//                     await page.click("#form_submit");
+//                 }
+
+//                 await page.waitForSelector("input[value='Voltar']", { visible: true })
+//                 await page.click("input[value='Voltar']");
+//                 await page.waitForNavigation()
+//                 await page.waitForSelector("input[value='Informar Tributos / Contribuições']", { visible: true })
+//                 await page.click("input[value='Informar Tributos / Contribuições']");
+
+//                 // INSS
+//                 // console.log(`INSS: Aliquota: ${row[20]} - Valor: ${row[21]}`)
+//                 if (parseFloat(row[21]) > 0) {
+//                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+//                     await page.select("#incluirTributoEsfera", "FEDERAL")
+//                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+//                     await page.select("#incluirTributoTipoFederal", "INSS")
+
+//                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+//                     await page.type("#incluirTributoAliquota", row[20])
+
+//                     await page.waitForSelector("#incluirTributoValor", { visible: true })
+//                     await page.type("#incluirTributoValor", row[21])
+
+//                     await page.waitForSelector("#incluirTributoData", { visible: true })
+//                     await page.type("#incluirTributoData", row[5])
+
+//                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+//                     await page.type("#incluirTributoDocumento", row[2])
+
+//                     await new Promise(resolve => setTimeout(resolve, 1000));
+//                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+//                     await page.click("input[value='Incluir Tributo']");
+//                     await page.waitForNavigation()
+//                 }
+
+//                 // INSS 13
+//                 // console.log(`INSS 13: Aliquota: ${row[26]} - Valor: ${row[27]}`)
+//                 if (parseFloat(row[28]) > 0) {
+//                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+//                     await page.select("#incluirTributoEsfera", "FEDERAL")
+//                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+//                     await page.select("#incluirTributoTipoFederal", "INSS")
+//                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+//                     await page.type("#incluirTributoAliquota", row[28])
+//                     await page.waitForSelector("#incluirTributoValor", { visible: true })
+//                     await page.type("#incluirTributoValor", row[29])
+//                     await page.waitForSelector("#incluirTributoData", { visible: true })
+//                     await page.type("#incluirTributoData", row[5])
+//                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+//                     await page.type("#incluirTributoDocumento", row[2])
+
+//                     await new Promise(resolve => setTimeout(resolve, 1000));
+//                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+//                     await page.click("input[value='Incluir Tributo']");
+//                 }
+
+//                 // IRRF
+//                 // console.log(`IRRF: Aliquota: ${row[24]} - Valor: ${row[25]}`)
+//                 if (parseFloat(row[25]) > 0) {
+//                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+//                     await page.select("#incluirTributoEsfera", "FEDERAL")
+//                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+//                     await page.select("#incluirTributoTipoFederal", "IR")
+//                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+//                     await page.type("#incluirTributoAliquota", row[24])
+//                     await page.waitForSelector("#incluirTributoValor", { visible: true })
+//                     await page.type("#incluirTributoValor", row[25])
+//                     await page.waitForSelector("#incluirTributoData", { visible: true })
+//                     await page.type("#incluirTributoData", row[5])
+//                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+//                     await page.type("#incluirTributoDocumento", row[2])
+
+//                     await new Promise(resolve => setTimeout(resolve, 1000));
+//                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+//                     await page.click("input[value='Incluir Tributo']");
+//                 }
+//                 // console.log(`IRRF 13: Aliquota: ${row[28]} - Valor: ${row[29]}`)
+//                 if (parseFloat(row[27]) > 0) {
+//                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
+//                     await page.select("#incluirTributoEsfera", "FEDERAL")
+//                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
+//                     await page.select("#incluirTributoTipoFederal", "INSS")
+//                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
+//                     await page.type("#incluirTributoAliquota", row[26])
+//                     await page.waitForSelector("#incluirTributoValor", { visible: true })
+//                     await page.type("#incluirTributoValor", row[27])
+//                     await page.waitForSelector("#incluirTributoData", { visible: true })
+//                     await page.type("#incluirTributoData", row[5])
+//                     await page.waitForSelector("#incluirTributoDocumento", { visible: true })
+//                     await page.type("#incluirTributoDocumento", row[2])
+
+//                     await new Promise(resolve => setTimeout(resolve, 1000));
+//                     await page.waitForSelector("input[value='Incluir Tributo']", { visible: true })
+//                     await page.click("input[value='Incluir Tributo']");
+//                     await page.waitForNavigation()
+//                 }
+
+//                 //OUTROS DESCONTO
+//                 // console.log(`OUTROS DESCONTO: ${row[18]}`)
+//                 if (parseFloat(row[18]) > 0) {
+//                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
+//                     await page.click("input[value='Contribuicao']")
+//                     await page.waitForSelector("#incluirContribuicaoDenominacao", { visible: true })
+//                     await page.select("#incluirContribuicaoDenominacao", "Outras Contribuições obrigatórias")
+//                     await page.waitForSelector("#incluirContribuicaoValorCont", { visible: true })
+//                     await page.type("#incluirContribuicaoValorCont", row[18])
+
+//                     await new Promise(resolve => setTimeout(resolve, 1000));
+//                     await page.waitForSelector("input[value='Incluir Contribuição']", { visible: true })
+//                     await page.click("input[value='Incluir Contribuição']")
+//                 }
+
+//                 await page.waitForSelector("input[value='Voltar']", { visible: true })
+//                 await page.click("input[value='Voltar']")
+//                 await page.waitForNavigation()
+
+//                 await dadosDocLiquidacao(row, page, false, false)
+
+//                 await new Promise(resolve => setTimeout(resolve, 100000000));
+
+//                 await page.on("dialog", async dialog => {
+//                     await delay(3000)
+//                     await dialog.accept();
+//                 })
+
+//                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
+//                 await page.click("input[value='Salvar Definitivo']")
+
+//                 writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: item concluido`)
+//                 console.log(`${new Date().toLocaleString()} - ${row[12]}: item concluido`)
+//                 return true
+//             } catch (error) {
+//                 writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: Erro na leitura: ${error}`)
+//                 console.log(`${new Date().toLocaleString()} - ${row[12]}: Erro na leitura: ${error}`)
+//                 return false
+//             }
+//         } else {
+//             console.log(`Holerite correspondente a CHAPA: ${row[12]} não foi encontrado!`)
+//             writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Holerite correspondente a CHAPA: ${row[12]} não foi encontrado!`)
+//             row = []
+//             return false
+//         }
+//     } catch (error) {
+//         writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: ${error}`);
+//         console.log(`${row[12]}: ${error}`);
+//         return false;
+//     }
+// }
