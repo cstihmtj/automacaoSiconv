@@ -48,7 +48,7 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     await page.waitForSelector("#salvarValor", { visible: true })
     await page.click("#salvarValor")
-    await page.type("#salvarValor", origemValor ? origemValor : row[6])
+    await page.type("#salvarValor", origemValor ? origemValor : row[27])
 
     await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
     await page.select("#salvarTipoPagamantoOBTV", "1")
