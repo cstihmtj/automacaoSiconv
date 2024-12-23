@@ -5,3 +5,4 @@ node_modules
 funcs/newMain.js
 arquivos/holerites/*.pdf
 arquivos/temp
+!arquivos/comparar/Instruções.txt
