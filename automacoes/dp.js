@@ -646,18 +646,35 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 await dadosDocLiquidacao(row, page, false, false)
 
                 // await new Promise(resolve => setTimeout(resolve, 100000000));
+                let isDialogHandled = false;
 
-                await page.on("dialog", async dialog => {
-                    await delay(3000)
-                    await dialog.accept();
-                })
+                await Promise.all([
+                    await page.on("dialog", async dialog => {
+                        if (!isDialogHandled) {
+                            isDialogHandled = true;
+                            await dialog.accept();
+                        }
+                    })
+                ])
 
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
-                await page.click("input[value='Salvar Definitivo']")
+                await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: item concluido`)
-                console.log(`${new Date().toLocaleString()} - ${row[12]}: item concluido`)
-                return true
+                const hasError = await page.evaluate(() => {
+                    return document.querySelector("#popUpLayer2") !== null;
+                });
+
+                if (hasError) {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    row = []
+                    return false;
+                } else {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: item concluido`)
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: item concluido`)
+                    row = []
+                    return true
+                }
             } catch (error) {
                 writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[12]}: Erro na leitura: ${error}`)
                 console.log(`${new Date().toLocaleString()} - ${row[12]}: Erro na leitura: ${error}`)
