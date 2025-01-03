@@ -16,7 +16,6 @@ const writeFile = async (texto) => {
         if (fs.existsSync(filePath)) {
             appendOptions = { flag: "a" };
         }
-        texto += "\r\n";
         fs.writeFile(filePath, texto, appendOptions, (err) => {
             if (err) {
                 console.log("Erro ao escrever no arquivo:", err)
