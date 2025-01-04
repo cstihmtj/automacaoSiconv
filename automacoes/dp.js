@@ -672,7 +672,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
 
                 await dadosDocLiquidacao(row, page, false, false)
 
-                await new Promise(resolve => setTimeout(resolve, 100000000));
+                // await new Promise(resolve => setTimeout(resolve, 100000000));
                 let isDialogHandled = false;
 
                 await Promise.all([
