@@ -474,7 +474,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 await page.click("#form_submit")
                 await page.waitForNavigation()
 
-                await reAnexar(row, page, anexoPath, anexo, row[12])
+                await reAnexar(row, page, anexoPath, anexo, row[3])
 
                 await page.waitForSelector("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']", { visible: true })
                 await page.click("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']")

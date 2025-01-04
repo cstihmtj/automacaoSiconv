@@ -139,7 +139,7 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                     cb()
                 } else {
                     countLines++
-                    console.log(`Erro na leitura da Chapa ${colunas[11] ? colunas[11] : colunas[1]}`)
+                    console.log(`Erro na leitura da Chapa ${colunas[12] ? colunas[12] : colunas[1]}`)
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Erro na leitura da linha!`)
                     writeFile("log", "erro", "csv", `${linhaLida} `)
                     colunas = []
