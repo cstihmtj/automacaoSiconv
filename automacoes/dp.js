@@ -75,7 +75,7 @@ const reAnexar = async (row, page, anexoPath, anexo, ref) => {
         await page.click("#tr-salvarNaoDigitalizar input[value='0']", { clickCount: 1 })
         await page.waitForSelector("input[type='file']", { visible: true });
         const inputUploadHandle = await page.$("input[type='file']");
-        await inputUploadHandle.uploadFile(`${anexoPath}\\${ref}.pdf`)
+        await inputUploadHandle.uploadFile(`${anexoPath}\\${ref}.PDF`)
         await page.waitForSelector(`#form_submit`, { visible: true })
         await page.click("#form_submit");
     } else {
