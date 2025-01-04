@@ -133,7 +133,7 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                 const tempoTotal = Math.round((end - start) / 1000)
                 if (executeLine) {
                     countLines++
-                    console.log(`Chapa ${colunas[11] ? colunas[11] : colunas[1]} executada com sucesso! - Tempo total: ${tempoTotal} seg`)
+                    console.log(`Chapa ${colunas[12] ? colunas[12] : colunas[1]} executada com sucesso! - Tempo total: ${tempoTotal} seg`)
                     writeFile("log", `${colunas[0].replace("/", "_")}`, "csv", `${linhaLida} `)
                     colunas = []
                     cb()

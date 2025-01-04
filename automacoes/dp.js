@@ -479,10 +479,59 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']", { visible: true })
                 await page.click("input[name='manterNotasFiscaisInserirDadosDaNotaFiscalPreencherDadosItensForm']")
 
-                // VALOR TOTAL ITENS - SERVICO
-                var valor_servicos = row[6] > 0 && row[1] == 1 ? row[6] : row[27]
-                console.log(parseFloat(row[6]), row[1])
-                if (parseFloat(valor_servicos) > 0) {
+                // CASO SEJA ASSISTENCIAL
+                if (row[1] == 1) {
+                    // VALOR TOTAL ITENS - SERVICO
+                    if (parseFloat(row[6]) > 0) {
+                        await page.waitForSelector("#incluirItemNomeItem", { visible: true })
+                        await page.type("#incluirItemNomeItem", row[12])
+                        await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
+                        await page.type("#incluirItemDescricaoItem", row[13])
+                        await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
+                        await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
+                        await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
+                        await page.click("#incluirItemValorTotalItem")
+                        await page.type("#incluirItemValorTotalItem", row[6])
+                        await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
+                        await page.type("#incluirItemQuantidadeItem", "1,00")
+                        await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
+                        await page.click(`input[value="${etapa}"]`)
+                        await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
+                        await page.type(`#incluirItemRecursosRepasse${etapa}`, row[6])
+
+                        await page.waitForSelector(`input[value="${metaServico}"]`, { visible: true })
+                        await page.click(`input[value="${metaServico}"]`)
+
+                        await page.waitForSelector(`#form_submit`, { visible: true })
+                        await page.click("#form_submit");
+                    }
+
+                    // VALOR TOTAL ITENS - TRIBUTO
+                    if (parseFloat(row[7])) {
+                        await page.waitForSelector("#incluirItemNomeItem", { visible: true })
+                        await page.type("#incluirItemNomeItem", row[12])
+                        await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
+                        await page.type("#incluirItemDescricaoItem", row[13])
+                        await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
+                        await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
+                        await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
+                        await page.click("#incluirItemValorTotalItem")
+                        await page.type("#incluirItemValorTotalItem", row[7])
+                        await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
+                        await page.type("#incluirItemQuantidadeItem", "1,00")
+                        await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
+                        await page.click(`input[value="${etapa}"]`)
+                        await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
+                        await page.type(`#incluirItemRecursosRepasse${etapa}`, row[7])
+
+                        await page.waitForSelector(`input[value="${metaTributo}"]`, { visible: true })
+                        await page.click(`input[value="${metaTributo}"]`)
+
+                        await page.waitForSelector(`#form_submit`, { visible: true })
+                        await page.click("#form_submit");
+                    }
+                } else {
+                    // VALOR TOTAL ITENS - SERVICO
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
                     await page.type("#incluirItemNomeItem", row[12])
                     await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
@@ -491,13 +540,13 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
                     await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
                     await page.click("#incluirItemValorTotalItem")
-                    await page.type("#incluirItemValorTotalItem", valor_servicos)
+                    await page.type("#incluirItemValorTotalItem", row[27])
                     await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
                     await page.type("#incluirItemQuantidadeItem", "1,00")
                     await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
                     await page.click(`input[value="${etapa}"]`)
                     await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
-                    await page.type(`#incluirItemRecursosRepasse${etapa}`, valor_servicos)
+                    await page.type(`#incluirItemRecursosRepasse${etapa}`, row[27])
 
                     await page.waitForSelector(`input[value="${metaServico}"]`, { visible: true })
                     await page.click(`input[value="${metaServico}"]`)
@@ -506,34 +555,10 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.click("#form_submit");
                 }
 
-                // VALOR TOTAL ITENS - TRIBUTO
-                if (parseFloat(row[7]) > 0 && row[1] == 1) {
-                    await page.waitForSelector("#incluirItemNomeItem", { visible: true })
-                    await page.type("#incluirItemNomeItem", row[12])
-                    await page.waitForSelector("#incluirItemDescricaoItem", { visible: true })
-                    await page.type("#incluirItemDescricaoItem", row[13])
-                    await page.waitForSelector("#incluirItemCodUnidadeFornecimento", { visible: true })
-                    await page.type("#incluirItemCodUnidadeFornecimento", "MÊS")
-                    await page.waitForSelector("#incluirItemValorTotalItem", { visible: true })
-                    await page.click("#incluirItemValorTotalItem")
-                    await page.type("#incluirItemValorTotalItem", row[7])
-                    await page.waitForSelector("#incluirItemQuantidadeItem", { visible: true })
-                    await page.type("#incluirItemQuantidadeItem", "1,00")
-                    await page.waitForSelector(`input[value="${etapa}"]`, { visible: true })
-                    await page.click(`input[value="${etapa}"]`)
-                    await page.waitForSelector(`#incluirItemRecursosRepasse${etapa}`, { visible: true })
-                    await page.type(`#incluirItemRecursosRepasse${etapa}`, row[7])
-
-                    await page.waitForSelector(`input[value="${metaTributo}"]`, { visible: true })
-                    await page.click(`input[value="${metaTributo}"]`)
-
-                    await page.waitForSelector(`#form_submit`, { visible: true })
-                    await page.click("#form_submit");
-                }
-
                 await page.waitForSelector("input[value='Voltar']", { visible: true })
                 await page.click("input[value='Voltar']");
                 await page.waitForNavigation()
+
                 await page.waitForSelector("input[value='Informar Tributos / Contribuições']", { visible: true })
                 await page.click("input[value='Informar Tributos / Contribuições']");
 
