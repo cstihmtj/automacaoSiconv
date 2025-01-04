@@ -461,7 +461,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
             ])
         }
 
-        if (anexo && await fileExist(anexoPath, row[12]) || !anexo && row[3].length == 11) {
+        if (anexo && await fileExist(anexoPath, row[3]) || !anexo && row[3].length == 11) {
             try {
                 const etapa = row[15]
                 const [metaServico, metaTributo] = row[16].split("_")
