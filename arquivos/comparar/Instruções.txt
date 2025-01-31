@@ -1,5 +1,0 @@
-1 - Retire do site do Siconv (https://idp.transferegov.sistema.gov.br/idp/login), o arquivo CSV referente aos lançamentos realizados no periodo desejado,
-e renomeie para siconv.csv e mova para a pasta arquivos/comparar;
-2 - Retire do sistema RM, o arquivo TXT do periodo desejado, renomeie para txt.csv e mova tambem para a pasta arquivos/comparar;
-3 - Execute o atalho Comparararquivos na pasta arquivos/comparar.
-4 - Um novo arquivo chamado novoTxt.txt será criado, mova o para a pasta arquivos/txt e reinicie o robo.

@@ -1,2 +1,0 @@
-node comparar.js
-pause
