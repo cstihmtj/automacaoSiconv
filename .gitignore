@@ -1,0 +1,8 @@
+node_modules
+*.csv
+*.txt
+!.gitignore
+funcs/newMain.js
+arquivos/holerites/*.pdf
+arquivos/temp
+!arquivos/comparar/Instruções.txt
