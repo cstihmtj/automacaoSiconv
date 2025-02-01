@@ -146,7 +146,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 var valorItemServico = row[14].replace(",", ".") - row[31].replace(",", ".")
                 valorItemServico = valorItemServico.toString().replace(".", ",")
 
-                await new Promise(resolve => setTimeout(resolve, 100000000));
+                // await new Promise(resolve => setTimeout(resolve, 100000000));
 
                 //ITEM SERVIÇO
                 if (parseFloat(row[14].replace(",", ".")) > 0) {
@@ -321,13 +321,16 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
                 await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
+                var errorMsg = ""
                 const hasError = await page.evaluate(() => {
-                    return document.querySelector("#popUpLayer2") !== null;
+                    var errorDialog = document.querySelector("#popUpLayer2")
+                    errorMsg = errorDialog.querySelector(".error").innerHTML
+                    return errorDialog !== null;
                 });
 
                 if (hasError) {
-                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                    console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: ${errorMsg}`);
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: ${errorMsg}`);
                     row = []
                     return false;
                 } else {
