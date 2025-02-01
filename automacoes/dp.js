@@ -146,8 +146,6 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 var valorItemServico = row[14].replace(",", ".") - row[31].replace(",", ".")
                 valorItemServico = valorItemServico.toString().replace(".", ",")
 
-                // await new Promise(resolve => setTimeout(resolve, 100000000));
-
                 //ITEM SERVIÇO
                 if (parseFloat(row[14].replace(",", ".")) > 0) {
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
@@ -306,6 +304,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
                 await page.select("#salvarTipoPagamantoOBTV", "1")
 
+                // await new Promise(resolve => setTimeout(resolve, 100000000));
 
                 let isDialogHandled = false;
 
@@ -321,11 +320,11 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
                 await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
-                var errorMsg = ""
+                // var errorMsg = ""
                 const hasError = await page.evaluate(() => {
-                    var errorDialog = document.querySelector("#popUpLayer2")
-                    errorMsg = errorDialog.querySelector(".error").innerHTML
-                    return errorDialog !== null;
+                    // var errorDialog = document.querySelector("#popUpLayer2")
+                    // errorMsg = errorDialog.querySelector(".error").innerHTML
+                    return document.querySelector("#popUpLayer2") !== null;
                 });
 
                 if (hasError) {
