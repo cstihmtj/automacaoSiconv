@@ -7,6 +7,7 @@ const writeFile = require("./funcs/writeFile")
 require("dotenv/config")
 const dp = require("./automacoes/dp")
 const audit = require("./automacoes/auditoria")
+const rh = require("./automacoes/rh")
 const main = require("./funcs/main")
 const { spawn } = require("child_process");
 const { performance } = require("perf_hooks");
@@ -124,6 +125,9 @@ const automacaoViaArquivo = async (filePath, opcao) => {
                         executeLine = await audit.rescisao(colunas, countLines, page)
                         break;
                     case 11:
+                        executeLine = await rh.cadastrar(colunas, countLines, page)
+                        break;
+                    case 12:
                         executeLine = await dp.excluirDoc(colunas, countLines, page)
                         break;
                     default:
@@ -243,6 +247,7 @@ const start = async () => {
     console.log("> 8) DP - Lançar rescisão sem anexo;")
     console.log("> 9) Auditoria - Lançar Folha/Férias;")
     console.log("> 10) Auditoria - Rescisão;")
+    console.log("> 11) RH - Lançar contas de pagamento;")
     // console.log("> 11) DP - Excluir doc. de liquidação;")
     console.log("> 0) Cancelar")
 

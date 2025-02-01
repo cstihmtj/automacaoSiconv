@@ -320,11 +320,10 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("input[value='Salvar Definitivo']", { visible: true })
                 await Promise.all([page.click("input[value='Salvar Definitivo']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
-                // var errorMsg = ""
-                const hasError = await page.evaluate(() => {
-                    // var errorDialog = document.querySelector("#popUpLayer2")
-                    // errorMsg = errorDialog.querySelector(".error").innerHTML
-                    return document.querySelector("#popUpLayer2") !== null;
+                const [hasError, errorMsg] = await page.evaluate(() => {
+                    var errorDialog = document.querySelector("#popUpLayer2")
+                    var errorMsg = errorDialog?.querySelector(".error").innerHTML.replaceAll("&nbsp"," ")
+                    return [errorDialog !== null, errorMsg];
                 });
 
                 if (hasError) {
@@ -666,7 +665,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
 
                 await dadosDocLiquidacao(row, page, false, false)
 
-                await new Promise(resolve => setTimeout(resolve, 100000000));
+                // await new Promise(resolve => setTimeout(resolve, 100000000));
                 let isDialogHandled = false;
 
                 await Promise.all([
