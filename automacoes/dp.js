@@ -22,6 +22,17 @@ const fileExist = async (folderPath, fileName) => {
     }
 }
 
+const prepararConta = (agencia, banco, conta) => {
+    if (agencia == "104" && conta.startsWith("000") && conta.length > 9) {
+        var contaTemp = conta.slice(3)
+        var [conta, digito] = contaTemp.includes("-") ? contaTemp.split("-") : [contaTemp.slice(0, -1), contaTemp[contaTemp.length - 1]]
+    } else {
+        var [conta, digito] = conta.includes("-") ? conta.split("-") : [conta.slice(0, -1), conta[conta.length - 1]]
+    }
+
+    return [conta, digito]
+}
+
 const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     const salvarNumero = await page.$("#salvarNumero");
     const salvarCpfCredor = await page.$("#salvarCpfCredor");
@@ -55,6 +66,8 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     await page.evaluate(() => { carregaCamposPagamento("1") })
 
+    var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10])
+
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
 
@@ -62,10 +75,12 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     await page.type("#salvarAgencia", op ? row[8] : row[9])
 
     await page.waitForSelector("#salvarConta", { visible: true })
-    await page.type("#salvarConta", op ? row[9] : row[10])
+    // await page.type("#salvarConta", op ? row[9] : row[10])
+    await page.type("#salvarConta", conta)
 
     await page.waitForSelector("#salvarDigitoConta", { visible: true })
-    await page.type("#salvarDigitoConta", op ? row[10] : row[11])
+    // await page.type("#salvarDigitoConta", op ? row[10] : row[11])
+    await page.type("#salvarDigitoConta", digito)
 }
 
 const reAnexar = async (row, page, anexoPath, anexo, ref) => {
@@ -322,7 +337,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
 
                 const [hasError, errorMsg] = await page.evaluate(() => {
                     var errorDialog = document.querySelector("#popUpLayer2")
-                    var errorMsg = errorDialog?.querySelector(".error").innerHTML.replaceAll("&nbsp"," ")
+                    var errorMsg = errorDialog?.querySelector(".error").innerHTML.replaceAll("&nbsp", " ")
                     return [errorDialog !== null, errorMsg];
                 });
 
