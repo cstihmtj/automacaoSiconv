@@ -158,8 +158,10 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
 
                 const [metaServico, metaTributo] = row[15].split("_")
                 const ITEMMETA = row[16]
-                var valorItemServico = row[14].replace(",", ".") - row[31].replace(",", ".")
-                valorItemServico = valorItemServico.toString().replace(".", ",")
+                var valor1 = row[14].replace(",", ".")
+                var valor2 = row[31].replace(",", ".")
+                var valorItemServico = valor1 > valor2 ? valor1 - valor2 : valor2 - valor1
+                valorItemServico = valorItemServico.toFixed(2).toString().replace(".", ",")
 
                 //ITEM SERVIÇO
                 if (parseFloat(row[14].replace(",", ".")) > 0) {
