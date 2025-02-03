@@ -71,8 +71,6 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
 
-    console.log(conta, digito)
-
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
 
