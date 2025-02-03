@@ -22,15 +22,16 @@ const fileExist = async (folderPath, fileName) => {
     }
 }
 
-const prepararConta = (agencia, banco, conta) => {
+const prepararConta = (agencia, banco, conta, digitoC, hasDigit) => {
     if (agencia == "104" && conta.startsWith("000") && conta.length > 9) {
-        var contaTemp = conta.slice(3)
-        var [conta, digito] = contaTemp.includes("-") ? contaTemp.split("-") : [contaTemp.slice(0, -1), contaTemp[contaTemp.length - 1]]
-    } else {
-        var [conta, digito] = conta.includes("-") ? conta.split("-") : [conta.slice(0, -1), conta[conta.length - 1]]
+        var contaTemp = conta.replaceAll(".", "")
+        contaTemp = conta.slice(3)
+        return contaTemp.includes("-") ? contaTemp.split("-") : [contaTemp.slice(0, -1), contaTemp[contaTemp.length - 1]]
+    } else if (hasDigit == "NULL") {
+        return conta.includes("-") ? conta.split("-") : [conta.slice(0, -1), conta[conta.length - 1]]
+    } else if (hasDigit != "NULL") {
+        return [conta, digitoC]
     }
-
-    return [conta, digito]
 }
 
 const dadosDocLiquidacao = async (row, page, origemValor, op) => {
@@ -66,7 +67,11 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     await page.evaluate(() => { carregaCamposPagamento("1") })
 
-    var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10])
+    var hasDigit = op ? row[10] : row[11]
+
+    var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
+
+    console.log(conta, digito)
 
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
