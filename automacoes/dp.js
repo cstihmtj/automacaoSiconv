@@ -23,9 +23,9 @@ const fileExist = async (folderPath, fileName) => {
 }
 
 const prepararConta = (agencia, banco, conta, digitoC, hasDigit) => {
+    var contaTemp = conta.replaceAll(".", "")
     if (agencia == "104" && conta.startsWith("000") && conta.length > 9) {
-        var contaTemp = conta.replaceAll(".", "")
-        contaTemp = conta.slice(3)
+        contaTemp = contaTemp.slice(3)
         return contaTemp.includes("-") ? contaTemp.split("-") : [contaTemp.slice(0, -1), contaTemp[contaTemp.length - 1]]
     } else if (hasDigit == "NULL") {
         return conta.includes("-") ? conta.split("-") : [conta.slice(0, -1), conta[conta.length - 1]]
@@ -69,7 +69,7 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     var hasDigit = op ? row[10] : row[11]
 
-    var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
+    // var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
 
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
@@ -78,12 +78,12 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     await page.type("#salvarAgencia", op ? row[8] : row[9])
 
     await page.waitForSelector("#salvarConta", { visible: true })
-    // await page.type("#salvarConta", op ? row[9] : row[10])
-    await page.type("#salvarConta", conta)
+    await page.type("#salvarConta", op ? row[9] : row[10])
+    // await page.type("#salvarConta", conta)
 
     await page.waitForSelector("#salvarDigitoConta", { visible: true })
-    // await page.type("#salvarDigitoConta", op ? row[10] : row[11])
-    await page.type("#salvarDigitoConta", digito)
+    await page.type("#salvarDigitoConta", op ? row[10] : row[11])
+    // await page.type("#salvarDigitoConta", digito)
 }
 
 const reAnexar = async (row, page, anexoPath, anexo, ref) => {
