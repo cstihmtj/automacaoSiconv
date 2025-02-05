@@ -56,6 +56,8 @@ const lancarPagamento = async (row, countLines, page) => {
                 await page.waitForSelector("#textoObservacaoPagamento", { visible: true });
                 await page.type("#textoObservacaoPagamento", `PGTO ${row[12]}`);
 
+                await delay(1000)
+
                 let isDialogHandled = false;
                 await Promise.all([
                     await page.on("dialog", async dialog => {
@@ -67,9 +69,10 @@ const lancarPagamento = async (row, countLines, page) => {
                 ])
 
                 await page.waitForSelector("input[value='Concluir Pagamento']", { visible: true })
-                await Promise.all([page.click("input[value='Concluir Pagamento']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
+                await Promise.all([page.click("input[value='Concluir Pagamento']"), page.waitForNavigation({ waitUntil: "networkidle0", visible: true })]);
 
                 const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
+
                 if (hasError) {
                     writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
                     console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
