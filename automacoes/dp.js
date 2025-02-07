@@ -70,7 +70,7 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     var hasDigit = op ? row[10] : row[11]
 
-    // var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
+    var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
 
     await page.waitForSelector("#salvarInTipoConta", { visible: true })
     await page.select("#salvarInTipoConta", bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
@@ -83,12 +83,12 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     await page.type("#salvarAgencia", op ? row[8] : row[9])
 
     await page.waitForSelector("#salvarConta", { visible: true })
-    await page.type("#salvarConta", op ? row[9] : row[10])
-    // await page.type("#salvarConta", conta)
+    // await page.type("#salvarConta", op ? row[9] : row[10])
+    await page.type("#salvarConta", conta)
 
     await page.waitForSelector("#salvarDigitoConta", { visible: true })
-    await page.type("#salvarDigitoConta", op ? row[10] : row[11])
-    // await page.type("#salvarDigitoConta", digito)
+    // await page.type("#salvarDigitoConta", op ? row[10] : row[11])
+    await page.type("#salvarDigitoConta", digito)
 }
 
 const reAnexar = async (row, page, anexoPath, anexo, ref) => {
