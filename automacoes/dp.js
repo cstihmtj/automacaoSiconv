@@ -2,6 +2,7 @@ const writeFile = require("../funcs/writeFile")
 const delay = require("delay");
 const path = require("path");
 const fs = require("fs");
+const bancosDigitas = ["260", "748", "280", "077", "290", "323", "335", "336", "348", "380", "536", "623", "756"]
 
 const resetValues = async (fields) => {
     try {
@@ -70,6 +71,10 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     var hasDigit = op ? row[10] : row[11]
 
     // var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
+
+    await page.waitForSelector("#salvarInTipoConta", { visible: true })
+    await page.select("#salvarInTipoConta", bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
+    console.log(bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
 
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
@@ -324,7 +329,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
                 await page.select("#salvarTipoPagamantoOBTV", "1")
 
-                // await new Promise(resolve => setTimeout(resolve, 100000000));
+                // await new Promise(resolve => setTimeout(resolve, 10000));
 
                 let isDialogHandled = false;
 
