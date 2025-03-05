@@ -74,7 +74,7 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
 
     await page.waitForSelector("#salvarInTipoConta", { visible: true })
     await page.select("#salvarInTipoConta", bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
-    console.log(bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
+    console.log(`BANCO CHAPA: ${row[11]}: ` + bancosDigitas.includes(op ? row[7] : row[8]) ? "DIGITAL" : "POUPANCA")
 
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
@@ -329,7 +329,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
                 await page.select("#salvarTipoPagamantoOBTV", "1")
 
-                // await new Promise(resolve => setTimeout(resolve, 10000));
+                // await new Promise(resolve => setTimeout(resolve, 10000000));
 
                 let isDialogHandled = false;
 
@@ -690,7 +690,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
 
                 await dadosDocLiquidacao(row, page, false, false)
 
-                // await new Promise(resolve => setTimeout(resolve, 100000000));
+                await new Promise(resolve => setTimeout(resolve, 100000000));
                 let isDialogHandled = false;
 
                 await Promise.all([

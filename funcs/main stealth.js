@@ -58,7 +58,9 @@ const startDebug = async () => {
             args: [
                 "--ignore-certificate-errors",
                 "--use-fake-ui-for-media-stream",
-                "--disable-geolocation"
+                "--disable-geolocation",
+                "--no-sandbox", 
+                "--disable-setuid-sandbox"
             ],
             defaultViewport: null
         });
