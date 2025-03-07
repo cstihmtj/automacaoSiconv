@@ -73,8 +73,8 @@ const dadosDocLiquidacao = async (row, page, origemValor, op) => {
     var [conta, digito] = prepararConta(op ? row[8] : row[9], op ? row[7] : row[8], op ? row[9] : row[10], op ? row[10] : row[11], hasDigit)
 
     await page.waitForSelector("#salvarInTipoConta", { visible: true })
-    await page.select("#salvarInTipoConta", bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : "1")
-    console.log(`BANCO CHAPA: ${row[11]}: ` + bancosDigitas.includes(op ? row[7] : row[8]) ? "DIGITAL" : "POUPANCA")
+    await page.select("#salvarInTipoConta", /*bancosDigitas.includes(op ? row[7] : row[8]) ? "4" : */"1")
+    // console.log(`BANCO CHAPA: ${row[11]}: ` + bancosDigitas.includes(op ? row[7] : row[8]) ? "DIGITAL" : "POUPANCA")
 
     await page.waitForSelector("#salvarBanco", { visible: true })
     await page.type("#salvarBanco", op ? row[7] : row[8])
@@ -772,37 +772,49 @@ const excluirDoc = async (row, countLines, page) => {
             ]);
         }
 
-        const registrosDuplicados = await page.evaluate(() => { return document.querySelectorAll("#notasFiscais tr").length; });
+        const registrosDuplicados = await page.evaluate(() => { return document.querySelectorAll("#tbodyrow tr").length; });
         if (registrosDuplicados > 1) {
-            await page.waitForSelector("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a", { visible: true })
-            await page.click("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a");
+            for (let total = 0; total < registrosDuplicados - 1; total++) {
+                await page.waitForSelector("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a", { visible: true })
+                await page.click("#tbodyrow > tr:nth-child(1) > td:nth-child(1) > a");
 
-            let isDialogHandled = false;
-            await Promise.all([
-                await page.on("dialog", async dialog => {
-                    if (!isDialogHandled) {
-                        isDialogHandled = true;
-                        await dialog.accept();
-                    }
-                })
-            ])
+                let isDialogHandled = false;
+                await Promise.all([
+                    await page.on("dialog", async dialog => {
+                        if (!isDialogHandled) {
+                            isDialogHandled = true;
+                            await dialog.accept();
+                        }
+                    })
+                ])
 
-            await page.waitForSelector("input[value='Excluir Doc. de Liquidação']", { visible: true })
-            await Promise.all([page.click("input[value='Excluir Doc. de Liquidação']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
+                await page.waitForSelector("input[value='Excluir Doc. de Liquidação']", { visible: true })
+                await Promise.all([page.click("input[value='Excluir Doc. de Liquidação']"), page.waitForNavigation({ waitUntil: "networkidle0" })]);
 
-            const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
-            if (hasError) {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: erro no envio do item`);
-                return false;
-            } else {
-                writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
-                console.log(`${new Date().toLocaleString()} - ${row[11]}: pagamento realizado!`)
-                return true
+                const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
+                if (hasError) {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro ao deletar item`);
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: erro ao deletar item`);
+                    return false;
+                } else {
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: item excluido!`)
+                    console.log(`${new Date().toLocaleString()} - ${row[11]}: item excluido!`)
+                    await page.goto(process.env.HOSTDP3)
+                    await Promise.all([
+                        page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
+                        await page.waitForSelector("#consultarNumero", { visible: true }),
+                        await page.type("#consultarNumero", row[2]),
+                        await page.waitForSelector("#form_submit", { visible: true }),
+                        await page.click("#form_submit")
+                    ]);
+                }
             }
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Todas as ocorrências duplicadas removidas! REF: ${row[2]}`);
+            console.log(`Todas as ocorrências duplicadas removidas! REF: ${row[2]}`);
+            return true
         } else {
-            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[1]}`);
-            console.log(`Nenhum registro duplicado encontrado! REF: ${row[1]}`);
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[2]}`);
+            console.log(`Nenhum registro duplicado encontrado! REF: ${row[2]}`);
             return false;
         }
     } catch (error) {
