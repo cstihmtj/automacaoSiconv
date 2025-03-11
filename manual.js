@@ -248,7 +248,7 @@ const start = async () => {
     console.log("> 9) Auditoria - Lançar Folha/Férias;")
     console.log("> 10) Auditoria - Rescisão;")
     console.log("> 11) RH - Lançar contas de pagamento;")
-    // console.log("> 11) DP - Excluir doc. de liquidação;")
+    console.log("> 12) DP - Excluir doc. de liquidação;")
     console.log("> 0) Cancelar")
 
     rl.question("Digite a opção p/ iniciar: ", async (op) => {

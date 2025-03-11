@@ -757,7 +757,7 @@ const excluirDoc = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#consultarNumero", { visible: true }),
-                await page.type("#consultarNumero", row[2]),
+                await page.type("#consultarNumero", row[1]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
             ]);
@@ -766,7 +766,7 @@ const excluirDoc = async (row, countLines, page) => {
             await Promise.all([
                 page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                 await page.waitForSelector("#consultarNumero", { visible: true }),
-                await page.type("#consultarNumero", row[2]),
+                await page.type("#consultarNumero", row[1]),
                 await page.waitForSelector("#form_submit", { visible: true }),
                 await page.click("#form_submit")
             ]);
@@ -793,28 +793,28 @@ const excluirDoc = async (row, countLines, page) => {
 
                 const hasError = await page.evaluate(() => { return document.querySelector("#popUpLayer2") !== null; });
                 if (hasError) {
-                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: erro ao deletar item`);
-                    console.log(`${new Date().toLocaleString()} - ${row[11]}: erro ao deletar item`);
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[1]}: erro ao deletar item`);
+                    console.log(`${new Date().toLocaleString()} - ${row[1]}: erro ao deletar item`);
                     return false;
                 } else {
-                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[11]}: item excluido!`)
-                    console.log(`${new Date().toLocaleString()} - ${row[11]}: item excluido!`)
+                    writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - ${row[1]}: item excluido!`)
+                    console.log(`${new Date().toLocaleString()} - ${row[1]}: item excluido!`)
                     await page.goto(process.env.HOSTDP3)
                     await Promise.all([
                         page.waitForNavigation({ waitUntil: ["load", "networkidle2"] }),
                         await page.waitForSelector("#consultarNumero", { visible: true }),
-                        await page.type("#consultarNumero", row[2]),
+                        await page.type("#consultarNumero", row[1]),
                         await page.waitForSelector("#form_submit", { visible: true }),
                         await page.click("#form_submit")
                     ]);
                 }
             }
-            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Todas as ocorrências duplicadas removidas! REF: ${row[2]}`);
-            console.log(`Todas as ocorrências duplicadas removidas! REF: ${row[2]}`);
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Todas as ocorrências duplicadas removidas! REF: ${row[1]}`);
+            console.log(`Todas as ocorrências duplicadas removidas! REF: ${row[1]}`);
             return true
         } else {
-            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[2]}`);
-            console.log(`Nenhum registro duplicado encontrado! REF: ${row[2]}`);
+            writeFile("log", "geral", "txt", `${new Date().toLocaleString()} - Nenhum registro duplicado encontrado! REF: ${row[1]}`);
+            console.log(`Nenhum registro duplicado encontrado! REF: ${row[1]}`);
             return false;
         }
     } catch (error) {
