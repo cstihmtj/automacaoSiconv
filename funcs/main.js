@@ -52,6 +52,7 @@ const startDebug = async () => {
             headless: false,
             browserURL: "http://127.0.0.1:9202",
             ignoreHTTPSErrors: true,
+            devtools: true,
             args: [
                 "--ignore-certificate-errors",
                 "--use-fake-ui-for-media-stream",
@@ -70,6 +71,7 @@ const startDebug = async () => {
         await page.setDefaultTimeout(process.env.TIMEOUT);
         await page.setJavaScriptEnabled(true)
         await page.bringToFront()
+        await page.evaluate(() => { debugger; });
         status = true;
     } catch (error) {
         console.error("Erro ao iniciar o navegador ou conectar ao Puppeteer:", error.message);
