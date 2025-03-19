@@ -209,6 +209,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 }
 
                 //ITEM TRIBUTO
+                // console.log("row[31]: ", parseFloat(row[31].replace(",", ".")) > 0)
                 if (parseFloat(row[31].replace(",", ".")) > 0) {
                     await page.waitForSelector("#incluirItemNomeItem", { visible: true })
                     await page.type("#incluirItemNomeItem", row[12], { delay: 1 })
@@ -236,13 +237,14 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
 
                 await clicarEAguardar(page, true, "input[value='Informar Tributos / Contribuições']");
 
+                // console.log("row[19]: ", parseFloat(row[19].replace(",", ".")) > 0)
                 if (parseFloat(row[19].replace(",", ".")) > 0) {
                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
                     await page.select("#incluirTributoEsfera", "FEDERAL")
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "INSS")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[19], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[19].replace(",", ""), { delay: 1 })
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[20], { delay: 1 })
                     await page.waitForSelector("#incluirTributoData", { visible: true })
@@ -251,13 +253,14 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirTributoDocumento", row[22], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Tributo']");
                 }
+                // console.log("row[23]: ", parseFloat(row[23].replace(",", ".")) > 0)
                 if (parseFloat(row[23].replace(",", ".")) > 0) {
                     await page.waitForSelector("#incluirTributoEsfera", { visible: true })
                     await page.select("#incluirTributoEsfera", "FEDERAL")
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "IR")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[23], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[23].replace(",", ""), { delay: 1 })
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[24], { delay: 1 })
                     await page.waitForSelector("#incluirTributoData", { visible: true })
@@ -266,6 +269,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirTributoDocumento", row[22], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Tributo']");
                 }
+                // console.log("row[25]: ", parseFloat(row[25].replace(",", ".")) > 0)
                 if (parseFloat(row[25].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -275,6 +279,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirContribuicaoValorCont", row[25], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
+                // console.log("row[26]: ", parseFloat(row[26].replace(",", ".")) > 0)
                 if (parseFloat(row[26].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -284,6 +289,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirContribuicaoValorCont", row[26], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
+                // console.log("row[27]: ", parseFloat(row[27].replace(",", ".")) > 0)
                 if (parseFloat(row[27].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -293,6 +299,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirContribuicaoValorCont", row[27], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
+                // console.log("row[28]: ", parseFloat(row[28].replace(",", ".")) > 0)
                 if (parseFloat(row[28].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -302,6 +309,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirContribuicaoValorCont", row[28], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
+                // console.log("row[29]: ", parseFloat(row[29].replace(",", ".")) > 0)
                 if (parseFloat(row[29].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -311,6 +319,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type("#incluirContribuicaoValorCont", row[29], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
+                // console.log("row[32]: ", parseFloat(row[32].replace(",", ".")) > 0)
                 if (parseFloat(row[32].replace(",", ".")) > 0) {
                     await page.waitForSelector("input[value='Contribuicao']", { visible: true })
                     await page.click("input[value='Contribuicao']")
@@ -320,7 +329,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                     await page.type('#incluirContribuicaoValorCont', row[32], { delay: 1 })
                     await clicarEAguardar(page, true, "input[value='Incluir Contribuição']");
                 }
-                
+
                 await clicarEAguardar(page, true, "input[value='Voltar']");
 
                 await page.waitForSelector("#salvarCpfCredor", { visible: true })
@@ -593,7 +602,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.select("#incluirTributoTipoFederal", "INSS")
 
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[19], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[19].replace(",", ""), { delay: 1 })
 
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[20], { delay: 1 })
@@ -617,7 +626,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "INSS")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[25], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[25].replace(",", ""), { delay: 1 })
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[26], { delay: 1 })
                     await page.waitForSelector("#incluirTributoData", { visible: true })
@@ -637,7 +646,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "IR")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[21], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[21].replace(",", ""), { delay: 1 })
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[22], { delay: 1 })
                     await page.waitForSelector("#incluirTributoData", { visible: true })
@@ -656,7 +665,7 @@ const lancarRescisao = async (row, countLines, page, anexo, anexoPath) => {
                     await page.waitForSelector("#incluirTributoTipoFederal", { visible: true })
                     await page.select("#incluirTributoTipoFederal", "IR")
                     await page.waitForSelector("#incluirTributoAliquota", { visible: true })
-                    await page.type("#incluirTributoAliquota", row[23], { delay: 1 })
+                    await page.type("#incluirTributoAliquota", row[23].replace(",", ""), { delay: 1 })
                     await page.waitForSelector("#incluirTributoValor", { visible: true })
                     await page.type("#incluirTributoValor", row[24], { delay: 1 })
                     await page.waitForSelector("#incluirTributoData", { visible: true })
