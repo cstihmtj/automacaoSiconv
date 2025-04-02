@@ -342,7 +342,7 @@ const lancarPagamento = async (row, countLines, page, anexo, anexoPath) => {
                 await page.waitForSelector("#salvarTipoPagamantoOBTV", { visible: true })
                 await page.select("#salvarTipoPagamantoOBTV", "1")
 
-                await new Promise(resolve => setTimeout(resolve, 10000000));
+                // await new Promise(resolve => setTimeout(resolve, 10000000));
 
                 let isDialogHandled = false;
 
